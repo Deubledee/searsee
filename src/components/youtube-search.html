@@ -1,0 +1,157 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<dom-module id="youtube-search">
+  <template>
+    <style> 
+       :host {        
+        --primary-color: #000000;
+        --paper-input-container-color: #000000;
+        display: block;
+        position: relative;
+        padding: 1em;
+      }
+
+      route-info {
+        color: #fff;
+      }
+    </style>
+
+    <!-- This app-route consumes the route which was provided by the tail of
+    a app-route in the host of this element -->
+    <app-route route="{{route}}" pattern="/:searchQuery" data="{{data}}">
+    </app-route>
+
+    <paper-input 
+      id="put" 
+      type="{{hidden}}"
+      label="Search Youtube"
+      value="{{data.searchQuery}}">
+    </paper-input>
+    <iron-ajax auto 
+      id="youtubeSearch"
+      url="https://www.googleapis.com/youtube/v3/{{apiPar}}" 
+      params="{{params}}"
+      last-response="{{videoData}}">
+    </iron-ajax>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'youtube-search',
+
+      properties: {
+        route: {
+          type: Object,
+          notify: true
+        },
+
+        data: {
+          type: Object
+        },
+
+        category: {
+          type: String,
+          notify: true
+        },
+
+        apiPar: {
+          type: String
+        },
+
+        hidden: String,
+
+        hide: {
+          type: String,
+          observer: '_hide'
+        },
+
+        search: {
+          type: String,
+          observer: '_toInput',
+        },
+
+        api: {
+          type: Object,
+        },
+
+        params: {
+          type: String,
+          computed: 'query(data.searchQuery)'
+        },
+
+        videoData: {
+          type: Object,
+          notify: true
+        }
+      },
+
+      observers: ['_pathChanged(route.path)'],
+
+      _pathChanged: function () {
+        this.async(function () {
+          if (!this.route.path) {
+            this.set('route.path', '/');
+          }
+        });
+      },
+
+      _hide: function (state) {
+        if (state === "false") {
+          this.set("hidden", "")
+        } else {          
+          this.set("hidden", "hidden")
+        }        
+      },
+
+      query: function (data) {
+        if (!this.data.searchQuery) {
+          this.set("apiPar", "search")
+          return this._search(data)
+        } else {
+          let method = "_" + this.api.method
+          this.set("apiPar", this.api.api)
+          return this[method](this.data.searchQuery)
+        }
+      },
+      _toInput: function (data) {
+        this.$.put.value = data
+      },
+      _channel: function (data) {
+        return {
+          part: 'snippet',
+          channelId: data,
+          maxResults: 30,
+          key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+          type: this.api.type
+        }
+      },
+      _search: function (data) {
+        return {
+          part: 'snippet',
+          maxResults: 30,
+          q: this.data.searchQuery || this.search,
+          key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+          type: 'video'
+        }
+      },
+      _videoDetails: function (data) {
+        return {
+          part: 'contentDetails',  
+          id: data,       
+          key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+        }
+      }
+    });
+  </script>
+</dom-module>

@@ -1,0 +1,170 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
+<dom-module id="page-login">
+  <template>
+    <style include="shared-styles">
+       :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+    <p>
+      <google-signin brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com"></google-signin>
+      <google-signin brand="google-plus" ></google-signin>
+      <div><code>&lt;google-signin-aware
+          <div>scope=
+            <select value="{{scope::change}}">
+              <option value="">None</option>
+              <option value="https://www.googleapis.com/auth/analytics">Google Analytics</option>
+              <option value="https://www.googleapis.com/auth/plus.login">Google Plus view circles</option>
+              <option value="https://www.googleapis.com/auth/youtube">YouTube</option>
+              <option value="https://www.googleapis.com/auth/calendar">Calendar</option>
+              <option value="profile">Profile info</option>
+            </select>
+          </div>
+          <div>openid-prompt=
+            <input type="checkbox" checked="{{openidPrompt.none::change}}">none
+            <input type="checkbox" checked="{{openidPrompt.login::change}}">login
+            <input type="checkbox" checked="{{openidPrompt.consent::change}}">consent
+            <input type="checkbox" checked="{{openidPrompt.select_account::change}}">select_account
+          </div>
+          <div>offline=<input type="checkbox" checked="{{offline::change}}"></div>
+          <div>initialized="<span>{{initialized}}</span>"</div>
+          <div>signedIn="<span>{{signedIn}}</span>"</div>
+          <div>isAuthorized="<span>{{isAuthorized}}</span>"</div>
+          <div>needAdditionalAuth:"<span>{{needAdditionalAuth}}</span>"&gt;</div>
+        </code></div>
+      <p>Every new scope you select will be added to requested scopes.</p>
+      <p>When you select a Google Plus scope, button will turn red.</p>
+      <google-signin></google-signin>
+    </p>
+    <google-signin-aware 
+        scopes="{{scope}}"         
+        openid-prompt="{{openidPromptValue}}" 
+        initialized="{{initialized}}"
+        signed-in="{{signedIn}}"
+        offline="{{offline}}" 
+        is-authorized="{{isAuthorized}}" 
+        need-additional-auth="{{needAdditionalAuth}}"
+        on-google-signin-aware-error="handleSignInError"
+        on-google-signin-aware-success="handleSignIn" 
+        on-google-signin-offline-success="handleOffline" 
+        on-google-signin-aware-signed-out="handleSignOut"
+        on-signed-in-changed="handleStateChange" 
+        on-initialized-changed="handleStateChange">
+    </google-signin-aware>
+    <p>User name:<span>{{userName}}</span></p>
+    <p>Testing <code>google-signin-aware</code> events: <span>{{status}}</span></p>
+    <p>Testing <code>google-signin-offline</code> events: <span>{{offlineCode}}</span></p>
+    <p>Only display "not signed in" element after auth state is initialized (avoid flickering): <b hidden id="not-signed-in">Not signed in!</b></p>
+    <p><button on-click="disconnect">Disconnect to start over</button></p>
+  </template>
+
+  <script>
+    class PageLogin extends Polymer.Element {
+      static get is() {
+        return 'page-login';
+      }
+
+      static get properties() {
+        return {
+          status: {
+            type: String,
+            value: 'Not granted'
+          },
+          offlineCode: {
+            type: String,
+            value: 'No offline login.'
+          },
+          userName: {
+            type: String,
+            value: 'N/A'
+          },
+          openidPrompt: {
+            type: Object,
+            value: {}
+          }
+        }
+      }
+      static get ready() {
+        setTimeout(() => {
+          this.addEventListener('openid-prompt-changed', function (e) {
+            if (e.detail.value) {
+              if (e.detail.path === 'openidPrompt.none') {
+                set('openidPrompt', {
+                  none: true,
+                  login: false,
+                  consent: false,
+                  select_account: false
+                });
+              } else {
+                set('openidPrompt.none', false);
+              }
+            }
+
+            var values = [];
+            Object.keys(openidPrompt).forEach(function (k) {
+              if (openidPrompt[k]) {
+                values.push(k);
+              }
+            });
+            this.set('openidPromptValue', values.join(' '));
+          });
+        }, 1250)
+      }
+      handleSignInError(event) {
+        console.log(event)
+        this.status = JSON.stringify(event.detail);
+      };
+      handleSignIn(response) {
+        console.log(response)
+        this.status = 'Signin granted';
+        // console.log('[Aware] Signin Response', response);
+        this.userName = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getName();
+      };
+      handleOffline(response) {
+        console.log(response)
+        this.offlineCode = response.detail.code;
+      };
+      handleSignOut(response) {
+        console.log(response)
+        this.status = 'Signed out';
+        // console.log('[Aware] Signout Response', response);
+        this.userName = 'N/A';
+      };
+      disconnect() {
+        var currentUser = gapi.auth2.getAuthInstance().currentUser.get();
+        if (currentUser) {
+          currentUser.disconnect();
+        }
+        gapi.auth2.getAuthInstance().signOut();
+      };
+
+      handleStateChange(e) {
+        console.log(e)
+        var signedIn = e.target.signedIn;
+        var initialized = e.target.initialized;
+        if (initialized && !signedIn) {
+          this.$["not-signed-in"].removeAttribute("hidden");
+        } else {
+          this.$["not-signed-in"].setAttribute("hidden", true);
+        }
+      }
+    }
+
+    window.customElements.define(PageLogin.is, PageLogin);
+  </script>
+</dom-module>

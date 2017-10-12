@@ -1,0 +1,89 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-slider/paper-slider.html">
+<dom-module id="time-input">
+  <template>
+    <style>
+       :host {
+        display: block;
+        --primary-color: var(--paper-red-500);
+        --primary-text-color: #fff;
+        --paper-toggle-button-unchecked-bar-color: #888;
+      }
+
+      paper-input {
+        width: 100px;
+      }
+
+      .caption {
+        padding-left: 12px;
+        color: #a0a0a0;
+      }
+
+      #grade {
+        --paper-slider-secondary-color: var(--paper-red-a200);
+      }
+
+      #ratings {
+        width: 100%
+      }
+
+      .input {
+        width: 100%
+      }
+
+      paper-slider.blue {
+        --paper-slider-knob-color: var(--paper-light-blue-500);
+        --paper-slider-active-color: var(--paper-light-blue-500);
+      }
+    </style>
+    <nav class="input">
+      <paper-slider id="grade" pin value="{{quEry}}" secondary-progress="70" resize="[[reSize]]"></paper-slider>
+    </nav>
+  </template>
+
+  <script>
+    class timeInput extends Polymer.Element {
+      static get is() {
+        return 'time-input';
+      }
+      static get properties() {
+        return {
+          time: {
+            type: String,
+          },
+          quEry: {
+            type: Number,
+            notify: true,
+            obsever: 'setTime'
+          },
+          realTime: {
+            type: String,
+            notify: true
+          },
+          reSize: {
+            type: Boolean,
+            notify: true,
+          }
+        }
+      }
+
+      setTime(time) {
+        this.set("realTime", time)
+        console.log(time)
+      }
+    }
+    window.customElements.define(timeInput.is, timeInput);
+  </script>
+</dom-module>

@@ -1,0 +1,312 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt-->
+
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../styles/shared-styles.html">
+<link rel="import" href="../components/youtube-search.html">
+<!--link rel="import" href="../components/youtube-channel.html"-->
+<link rel="import" href="../components/youtube-toolbar.html">
+<link rel="import" href="../components/video-viewer.html">
+<link rel="import" href="../components/search-results.html">
+<dom-module id="my-youtube">
+  <template id="page-template">
+    <custom-style>
+      <style>
+        body {
+          margin: 0;
+          font-family: arial;
+          background-color: #eee;
+        }
+
+        app-header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 212px;
+          color: #fff;
+          background-color: #3f51b5;
+          /* https://bugs.chromium.org/p/chromium/issues/detail?id=637072 */
+          --app-header-background-front-layer: {
+            background-image: url(https://app-layout-assets.appspot.com/assets/bg1.jpg);
+            background-position: left center;
+          }
+          ;
+        }
+
+        paper-icon-button {
+          --paper-icon-button-ink-color: white;
+        }
+
+        app-toolbar.tall {
+          height: 148px;
+        }
+
+        sample-content {
+          padding-top: 212px;
+        }
+
+        [main-title] {
+          font-weight: lighter;
+          margin-left: 108px;
+        }
+
+        [condensed-title] {
+          font-weight: lighter;
+          margin-left: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        [condensed-title] i {
+          font-weight: 100;
+          font-style: normal;
+        }
+
+        @media (max-width: 639px) {
+          [main-title] {
+            margin-left: 50px;
+            font-size: 30px;
+          }
+          [condensed-title] {
+            font-size: 15px;
+          }
+        }
+
+         :host([video-page-active]) {
+          overflow: hidden;
+        }
+
+         :host([video-page-active]) iron-pages {
+          transform: translateY(-170px);
+        }
+
+        iron-pages {
+          transition: transform 0.3s;
+        }
+
+        search-results {
+          display: block;
+          padding: 4px 1px 1px 3px;
+        }
+
+        section {
+          padding-top: 1px;
+        }
+
+        nav {
+          width: 100%;
+          height: 100px;
+          background-color: gray;
+          position: absolute;
+          bottom: 0%;
+          margin-top: 200px
+        }
+      </style>
+    </custom-style>
+    <app-location route="{{route}}"></app-location>
+    <!-- app-routes parse route paths based on the their `pattern`.
+        Parameters are extracted into the `data` object. The rest of the path that
+        comes after the `pattern` is put into the `tail` object, which can be
+        passed to the `route` property of downstream app-routes. -->
+    <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
+    <app-route route="{{route}}" pattern="/search" tail="{{searchTail}}"></app-route>
+    <app-route route="{{route}}" pattern="/channels" tail="{{channelsTail}}"></app-route>
+    <app-route route="{{route}}" pattern="/video" tail="{{videoTail}}" active="{{videoPageActive}}"></app-route>
+    <main>
+      <section>
+        <article>
+          <youtube-toolbar collapsed$="{{videoPageActive}}">
+            <!-- The youtube-search has a app-route that consumes the tail of
+                another route (`searchTail`) -->
+            <youtube-search route="[[searchTail]]" api="[[list]]" hide="false" search="[[dataq]]" video-data="{{videoData}}">
+            </youtube-search>
+
+          </youtube-toolbar>
+          <article>
+            <video-viewer id="video" route="{{videoTail}}"></video-viewer>
+          </article>
+          <article>
+            <search-results id="search" items="{{videos}}"></search-results>
+          </article>
+          <article>
+          <youtube-search route="[[channelsTail]]" api="[[channel]]"  hide="true" video-data="{{videoData}}">
+          </youtube-search>          
+          </p>
+        </article>  
+      </section>
+    </main>
+
+  </template>
+  <script>
+    class MyView1 extends Polymer.Element {
+      static get is() {
+        return 'my-youtube';
+      }
+
+      constructor() {
+        super();
+      }
+
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+          routePage: {
+            type: Object
+          },
+
+          videoData: {
+            type: Object,
+            observer: '_videoDataChanged',
+          },
+
+          videoPageActive: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_videoPageActiveChanged'
+          },
+
+          searchTail: {
+            type: Object,
+            notify: true
+          },
+
+          channelsTail: {
+            type: Object,
+            notify: true
+          },
+
+          videoTail: {
+            type: Object,
+            notify: true
+          },
+
+          newCategory: {
+            type: String
+          },
+
+          videos: {
+            type: Array,
+            value: function () {
+              return [];
+            },
+            notify: true
+          },
+
+          dataq: {
+            type: String,
+            value: "zen",
+            notify: true
+          },
+          time: {
+            type: String,
+            notify: true
+          },
+          data: {
+            type: Object,
+            value: function () {
+              return {
+                page: '/search/'
+              };
+            }
+          },
+          channel: {
+            type: Object,
+            value: function () {
+              return {
+                method: "channel",
+                api: "search",
+                type: "video"
+              }
+            }
+          },
+          list: {
+            type: Object,
+            value: function () {
+              return {
+                method: "search",
+                api: "search",
+                type: "video"
+              }
+            }
+          }
+        }
+      };
+
+      attached() {
+        // If we do not have an initial URL, we redirect to /search
+        if (!this.route || !this.route.path) {
+          this.set('route.path', '/search/');
+        }
+      }
+      _videoDataChanged(data) {
+        var allVideos = [];
+        var that = this;       
+        if (data)
+        console.log(data)
+          data.items.forEach(function (videoItem) {
+            var youtubeVideo = {
+              id: videoItem.id.videoId,
+              title: videoItem.snippet.title,
+              shortTitle: that.removeBadCharacters(videoItem.snippet.title.toLocaleLowerCase()) + " ...!!",
+              thumbnail: videoItem.snippet.thumbnails.medium.url,
+              channelTitle: videoItem.snippet.channelTitle.toLocaleLowerCase(),
+              channelId: videoItem.snippet.channelId,
+              videoItem: videoItem
+            };
+
+            allVideos.push(youtubeVideo);
+          })
+        this.set('videos', allVideos);
+      }
+
+      removeBadCharacters(char) {
+        let arr = char.split(" ")
+        let arr2 = []
+        arr.map(item => {
+          arr2.push(item.match(/\w[A-z]*/))
+        })
+        return arr2.join(" ")
+      }
+      _videoPageActiveChanged(videoPageActive, previousValue) {
+        // change color of page on page change
+        var newColor;
+        this.routePage = "videos"
+        if (videoPageActive) {
+          // black
+          this.$.video.style.display = "block"
+          newColor = 0;
+        } else {
+          // white
+          newColor = 255;
+          this.$.video.style.display = ""
+        }
+
+        document.body.style.backgroundColor = 'rgb(' + newColor + ',' + newColor +
+          ',' + newColor + ')';
+        this.$.video.style.zIndex = 1
+        // on first load, set the color then allow color transition animations
+        if (previousValue === undefined) {
+          document.body.style.transition = 'background-color .2s linear';
+          return;
+        }
+      }
+    }
+    window.customElements.define(MyView1.is, MyView1);
+  </script>
+</dom-module>

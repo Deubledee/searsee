@@ -1,0 +1,149 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-styles/shadow.html">
+<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../bower_components/google-youtube/google-youtube.html">
+
+
+<dom-module id="youtube-channel">
+  <template>
+    <style>
+
+    </style>
+
+    <!-- This app-route consumes the route which was provided by the tail of
+    a app-route in the host of this element -->
+    <app-route route="{{route}}" pattern="/:searchQuery" data="{{data}}">
+    </app-route>
+
+    <paper-input type="hidden" id="put2" value="{{data.searchQuery}}"></paper-input>
+    <!--https://www.googleapis.com/youtube/v3/videos-->
+    <iron-ajax auto id="channelSearch" url="https://www.googleapis.com/youtube/v3/search" params="{{params}}" last-response="{{channelData}}">
+    </iron-ajax>
+  </template>
+
+  <script>
+    class youtubeChannel extends Polymer.Element {
+      static get is() {
+        return 'youtube-channel';
+      }
+
+      constructor() {
+        super();
+      }
+
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+
+          data: {
+            type: Object
+          },
+
+          category: {
+            type: String,
+            notify: true
+          },
+
+          seArch: {
+            type: String,
+            observer: '_toInput',
+          },
+
+          params: {
+            type: String,
+            computed: 'query(data.searchQuery)'
+          },
+
+          api: {
+            type: Object,
+            observer: ''
+          },
+
+          channelData: {
+            type: Object,
+            notify: true
+          }
+        }
+      }
+
+      observers() {
+        return ['_pathChanged(route.path)', '_toInput(data.searchQuery)']
+      }
+
+      _pathChanged() {
+        this.async(function () {
+
+          if (!this.route.path) {
+            this.set('route.path', '/');
+          }
+        });
+      }
+      _toInput(data) {
+        this.$.put2.value = data
+        console.log(this.$.put2.value)
+      }
+
+      channel(category) {
+        console.log("channel got called")
+        return {
+          part: 'snippet',
+          channelId: data,
+          maxResults: 50,
+          key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+          type: this.api.type
+        }
+      }
+
+      _search(data) {
+        console.log("search got called")
+        return {
+          part: 'snippet',
+          maxResults: 50,
+          q: this.data.searchQuery || this.search || 'cats',
+          key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+          type: 'video'
+        }
+      }
+      query(data) {
+        if (!data) {
+          console.log("query", this.data.searchQuery, data)
+          return this._search(data)
+        } else {
+          let api = "_" + this.api.api
+          console.log("query api", this.api.api)
+          return this[api](this.data.searchQuery)
+        }
+      }
+      /*  search(category) {
+          return {
+            part: 'snippet',
+            channelId: category,
+            maxResults: 50,
+            key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
+            type: this.api.type
+          }
+        }*/
+
+      /*  ?
+        part = contentDetails & id = 1 Wh8RzcQZr4 & key = 
+          YOUR_API_KEY*/
+
+    }
+    window.customElements.define(youtubeChannel.is, youtubeChannel);
+  </script>
+</dom-module>

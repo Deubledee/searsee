@@ -1,0 +1,109 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<dom-module id="search-results">
+  <template>
+    <style>
+       :host {
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+        @apply --layout-wrap;
+      }
+
+      a {
+        color: black;
+        text-decoration: none;
+      }    
+
+      .nav {
+        float: left;
+        width: 100%;
+        font-size: 14px;
+      }
+
+      .card-content {
+        width: 88%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 5px;
+        font-size: 14px;
+      }
+
+      .contentView {
+        z-index: 1;
+        font-style: italic;
+        flex-grow: 7;
+        font-size: 14px;
+        /* background-color: #71a17b; */
+        color: #b77b7b;
+        margin-right: 3px;
+        font-weight: bolder;
+      }
+
+      .channelView {
+        z-index: 1;
+        font-style: italic;
+        flex-grow: 7;
+        font-size: 14px;
+        color: #7b1e1e;
+        margin-right: 3px;
+        font-weight: bolder;
+      }
+
+      .channelViewTitle {
+        font-size: 13px;
+        color: #4c6e92;
+        font-weight: bolder;
+      }
+    </style>
+    <template is="dom-repeat" items="{{items}}" as="video">
+      <!-- The '#' is included because the use-hash-as-path property is
+      set to true in the app-location -->
+      
+        <a href="../video/{{video.id}}" on-click="_seethisshit">
+          <paper-card class="nav" image="{{video.thumbnail}}">
+            <div class="card-content" title="{{video.title}}">
+              <span class="contentView"> {{video.shortTitle}} </span>
+              <P>
+                <a href="../channels/{{video.channelId}}">
+                  <span class="channelView"><b>Chanel:</b> </span>
+                 <span class="channelViewTitle">{{video.channelTitle}} </span>            
+                </a>
+              </P>
+            </div>
+          </paper-card>
+        </a>   
+
+    </template>
+  </template>
+  <script>
+    Polymer({
+      is: 'search-results',
+
+      properties: {
+        items: {
+          type: Array,
+          obsever: '_seethisshit'
+        }
+      },
+
+      _seethisshit: function () {
+        window.scrollTo(0,280)
+      /* this.items.map(data => {
+          console.log(data, "hey..!")
+        })*/
+      }
+
+    })
+  </script>
+</dom-module>
