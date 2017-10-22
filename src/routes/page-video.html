@@ -1,0 +1,323 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../components/youtube-search.html">
+<link rel="import" href="./youtube-lite.html">
+<link rel="import" href="./time-input.html">
+<link rel="import" href="../styles/shared-styles-nav.html">
+<dom-module id="page-video">
+  <template>
+    <style include="shared-styles-nav">
+      :host {
+        display: none;
+        position: relative;
+        height: calc(100vh - 60px);
+        --primary-color: var(--paper-red-500);
+        --primary-text-color: #fff;
+        --paper-toggle-button-unchecked-bar-color: #888;
+      }
+
+      paper-input {
+        margin-left: -10%;
+        width: 74px;
+      }
+
+      paper-toggle-button {
+        padding-top: 31px;
+      }
+
+      #controls {
+        color: #fff;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        height: 30%;
+      }
+
+      #controls>div {
+        @apply --layout-horizontal;
+        padding-bottom: 1em;
+      }
+
+      #state {
+        margin-left: 16px;
+      }
+
+      #player {
+        height: 70%;
+      }
+
+      .z2 {
+        z-index: 2;
+      }
+
+      .search {
+        display: none
+      }
+
+      .coverInput {
+        position: absolute;
+        width: 100%;
+        height: 112px;
+        ;
+        z-index: 1;
+      }
+    </style>
+
+    <!-- This app-route consumes the route which was provided by the tail of
+    a app-route in the host of this element. This means that the parent that
+    provides this route decides where this element lives in the URL space. In
+    this case, the parent, which uses hashes, matches #/video and hence this
+    element lives in <App serving point>?querParams#/video/:vid -->
+    <app-route route="{{route}}" pattern="/:vid" data="{{data}}" query-params="{{queryParams}}" active="{{videoPageActive}}">
+    </app-route>
+
+    <!-- You can bind any element's state into the URL by binding their
+    properties into the queryParams object. youtube-lite doesn't have any code
+    that's even aware of routing or the URL. -->
+    <youtube-lite id="player" video-id="{{data.vid}}" state="{{queryParams.state}}" current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
+    </youtube-lite>
+
+    <div id="controls">
+
+      <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
+        on-down="pause" on-up="play"></time-input>
+      <div class="coverInput"></div>
+      <ul class="nav">
+        <li class="nav-item">
+          <paper-input id="time" type="string" label="Elapsed" on-click="prevent" value="{{transformedTime}}">
+          </paper-input>
+        </li>
+        <li class="nav-item">
+          <span class="nav-link active"> </span>
+        </li>
+        <li class="nav-item">
+          <paper-input id="time" type="string" label="Duration" value="{{fulTime}}">
+          </paper-input>
+        </li>
+        <li class="nav-item z2">
+          <paper-toggle-button id="state" active="{{playing}}">
+            [[queryParams.state]]
+          </paper-toggle-button>
+        </li>
+      </ul>
+      <youtube-search class="search" search="{{data.vid}}" api="[[Details]]" hide="true" video-data="{{timeData}}">
+      </youtube-search>
+    </div>
+
+  </template>
+
+  <script>
+    class pageVideo extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() {
+        return 'page-video'
+      }
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+          timeData: {
+            type: Object,
+            observer: '_toSeconds',
+          },
+          realTime: {
+            type: String,
+            obsever: 'setTime'
+          },
+          playing: {
+            type: Boolean
+          },
+          transformedTime: {
+            type: String,
+            notify: true
+          },
+          videoPageActive: {
+            type: Boolean,
+            reflectToAttribute: true,
+            observer: '_videoPageActiveChanged'
+          },
+          queryParams: {
+            type: Object,
+          },
+          resize: {
+            type: Boolean,
+            notify: true,
+          },
+          hours: {
+            type: String,
+            value: "0"
+          },
+          minutes: {
+            type: String,
+            value: "0"
+          },
+          seconds: {
+            type: String,
+            value: "0"
+          },
+          time: {
+            type: String,
+            notify: true
+          },
+          fulTime: {
+            type: String,
+            notify: true
+          },
+          Details: {
+            type: Object,
+            value: function () {
+              return {
+                method: "videoDetails",
+                api: "videos"
+              }
+            }
+          }
+        }
+      }
+
+      static get observers() {
+        return [
+          '_playingChanged(playing)',
+          '_stateChanged(queryParams.state)',
+          '_time(queryParams)'
+        ]
+      }
+
+      _toSeconds(obj) {
+        if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
+          let time, mTime, sTime, hTime, seconds
+          if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
+            time = obj.items[0].contentDetails.duration.split("H")
+            hTime = time[0].split("PT")[1]
+            mTime = time[1].split("M")[0]
+            sTime = time[1].split("M")[1].split("S").join()
+            hTime = parseInt(hTime)
+            mTime = parseInt(mTime)
+            sTime = parseInt(sTime)
+            hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
+            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+            time = hTime + ":" + mTime + ":" + sTime
+            seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
+          } else {
+            time = obj.items[0].contentDetails.duration.split("M")
+            mTime = time[0].split("PT")[1]
+            sTime = time[1].split("S")[0]
+            mTime = parseInt(mTime)
+            sTime = parseInt(sTime)
+            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+            time = mTime + ":" + sTime
+            seconds = (parseInt(mTime) * 60) + parseInt(sTime)
+          }
+          this.set("time", seconds.toString())
+          this.set("fulTime", time.toString())
+        }
+      }
+
+      _time(data) {
+        if (data.hasOwnProperty("state") === false) {
+          this.transformedTime = `00:00:00`
+        }
+        if (data.state === 'playing') {
+          this.set("seconds", (data.time % 60) < 10 ? `0${(data.time % 60)}` : `${(data.time % 60)}`)
+          this.set("transformedTime", `${this.hours}:${this.minutes}:${this.seconds}`)
+          if ((parseInt(data.time) % 60) === 0) {
+            this.getTime(data)
+          }
+        }
+      }
+
+      getTime(data) {
+        if (data.hasOwnProperty("time") === true) {
+          var realTime = (data.time / 60),
+            toDec = realTime.toString().split("."),
+            mins, hours;
+          if (data.time >= 3600) {
+            realTime = parseFloat(toDec[0]) / 60
+            if (realTime % 60 > 0) {
+              hours = parseFloat((data.time / 3600)).toString().split(".")[0]
+              mins = toDec[0] % 60
+            }
+            if (realTime % 60 === 0) {
+              hours = parseInt(this.hours.value) + 1
+              mins = toDec[0] % 60
+            }
+          } else {
+            mins = toDec[0] % 60
+            hours = "0"
+          }
+          mins = mins < 10 ? `0${mins}` : `${mins}`
+          this.set("minutes", mins)
+          hours = hours < 10 ? `0${hours}` : `${hours}`
+          this.set("hours", hours)
+        }
+      }
+
+      pause() {
+        this.set('queryParams.state', 'paused');
+      }
+
+      setTime(time) {
+        getTime({
+          time: time
+        })
+      }
+
+      play() {
+        setTimeout(() => {
+          this.set('queryParams.state', 'playing');
+        }, 200)
+
+      }
+
+      _playingChanged(playing) {
+        this.set('queryParams.state', playing ? 'playing' : 'paused');
+        this.getTime(this.queryParams)
+      }
+
+      _stateChanged(state) {
+        this.playing = state === 'playing';
+        this.getTime(this.queryParams)
+      }
+      _videoPageActiveChanged(videoPageActive, previousValue) {
+        // change color of page on page change
+        var newColor;
+        this.routePage = "videos"
+        if (videoPageActive) {
+          // black
+          //this.style.display = "block"
+          newColor = 0;
+        } else {
+          // white
+          newColor = 255;
+          this.style.display = ""
+        }
+
+        document.body.style.backgroundColor = 'rgb(' + newColor + ',' + newColor +
+          ',' + newColor + ')';
+        this.style.zIndex = 1
+        // on first load, set the color then allow color transition animations
+        if (previousValue === undefined) {
+          document.body.style.transition = 'background-color .2s linear';
+          return;
+        }
+      }
+    }
+    window.customElements.define(pageVideo.is, pageVideo);
+  </script>
+</dom-module>

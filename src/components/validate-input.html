@@ -29,7 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
         </style>
         <search-validator id="validator" values="{{value}}" valid={{invalid}}></search-validator>
-        <paper-input id="input" label="{{value}}" value="{{search}}" on-click="clear"></paper-input>
+        <paper-input id="input" label="{{label}}" value="{{search}}" on-click="clear"></paper-input>
     </template>
     <script>
         class validateInput extends Polymer.mixinBehaviors([Polymer.IronValidatorBehavior], Polymer.Element) {
@@ -45,6 +45,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         observer: '_onInput'
                     },
                     value: {
+                        type: String,
+                        notify: true
+                    },
+                    label: {
                         type: String,
                         notify: true
                     },

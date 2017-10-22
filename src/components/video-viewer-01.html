@@ -1,0 +1,221 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="./youtube-lite.html">
+<link rel="import" href="./time-input.html">
+<link rel="import" href="../styles/shared-styles-container.html">
+<dom-module id="video-viewer">
+  <template>
+    <style include="shared-styles-container">
+       :host {
+        display: none;
+        position: relative;
+        height: calc(100vh - 60px);
+        --primary-color: var(--paper-red-500);
+        --primary-text-color: #fff;
+        --paper-toggle-button-unchecked-bar-color: #888;
+      }
+
+      paper-input {
+        margin-left: -10%;
+        width: 74px;
+      }
+      paper-toggle-button{
+        padding-top: 31px; 
+      }
+      #controls {
+        color: #fff;
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        height: 30%;
+      }
+
+      #controls>div {
+        @apply --layout-horizontal;
+        padding-bottom: 1em;
+      }
+
+      #state {
+        margin-left: 16px;
+      }
+
+      #player {
+        height: 70%;
+      }
+    </style>
+
+    <!-- This app-route consumes the route which was provided by the tail of
+    a app-route in the host of this element. This means that the parent that
+    provides this route decides where this element lives in the URL space. In
+    this case, the parent, which uses hashes, matches #/video and hence this
+    element lives in <App serving point>?querParams#/video/:vid -->
+    <app-route route="{{route}}" pattern="/:vid" data="{{data}}" query-params="{{queryParams}}">
+    </app-route>
+
+    <!-- You can bind any element's state into the URL by binding their
+    properties into the queryParams object. youtube-lite doesn't have any code
+    that's even aware of routing or the URL. -->
+    <youtube-lite id="player" video-id="{{data.vid}}" state="{{queryParams.state}}" current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
+    </youtube-lite>
+
+    <div id="controls">
+
+      <time-input id="fds" re-size="{{resize}}" qu-ery="{{queryParams.time}}" real-time="{{realTime}}" on-down="pause" on-up="play"></time-input>
+
+      <div class="container">       
+          <div class="col-xs-8">
+            <paper-input id="time" type="string" on-focus="pause" label="Time" value="{{transformedTime}}">
+            </paper-input>
+          </div>
+          <div class="col-xs-8">
+            <paper-toggle-button id="state" active="{{playing}}">
+              [[queryParams.state]]
+            </paper-toggle-button>
+          </div>        
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    class videoViewer extends Polymer.GestureEventListeners(Polymer.Element) {
+      static get is() {
+        return 'video-viewer'
+      }
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+          realTime: {
+            type: String,
+            obsever:'setTime'
+          },
+          playing: {
+            type: Boolean
+          },
+          transformedTime: {
+            type: String,
+            notify: true
+          },
+          queryParams: {
+            type: Object,
+          },
+          resize: {
+            type: Boolean,
+            notify: true,
+          },
+          hours: {
+            type: String,
+            value: "0"
+          },
+          minutes: {
+            type: String,
+            value: "0"
+          },
+          seconds: {
+            type: String,
+            value: "0"
+          },
+        }
+      }
+
+      static get observers() {
+        return [
+          '_playingChanged(playing)',
+          '_stateChanged(queryParams.state)',
+          '_time(queryParams)'
+        ]
+      }
+
+      ready() {
+        super.ready()
+        this.set('transformedTime', '00:00:00')
+        window.onresize = (function (event) {
+          if (Polymer.dom(document.body.children[1]).node.routeData.page === "video") {
+            this.set("resize", true)
+          }
+        }).bind(this)
+      }
+
+      _time(data) {
+        if (data.hasOwnProperty("state") === false) {
+          this.transformedTime = `00:00:00`
+        }
+        if (data.state === 'playing') {
+          this.set("seconds", (data.time % 60) < 10 ? `0${(data.time % 60)}` : `${(data.time % 60)}`)
+          this.set("transformedTime", `${this.hours}:${this.minutes}:${this.seconds}`)
+          if ((parseInt(data.time) % 60) === 0) {
+            this.getTime(data)
+          }
+        }
+      }
+
+      getTime(data) {
+        if (data.hasOwnProperty("time") === true) {
+          var realTime = (data.time / 60),
+            toDec = realTime.toString().split("."),
+            mins, hours;
+          if (data.time >= 3600) {
+            realTime = parseFloat(toDec[0]) / 60
+            if (realTime % 60 > 0) {
+              hours = parseFloat((data.time / 3600)).toString().split(".")[0]
+              mins = toDec[0] % 60
+            }
+            if (realTime % 60 === 0) {
+              hours = parseInt(this.hours.value) + 1
+              mins = toDec[0] % 60
+            }
+          } else {
+            mins = toDec[0] % 60
+            hours = "0"
+          }
+          mins = mins < 10 ? `0${mins}` : `${mins}`
+          this.set("minutes", mins)
+          hours = hours < 10 ? `0${hours}` : `${hours}`
+          this.set("hours", hours)
+        }
+      }
+
+      pause() {
+        this.set('queryParams.state', 'paused');
+      }
+
+      setTime(time) {
+        getTime({time: time})
+      }
+
+      play() {
+        setTimeout(() => {
+          this.set('queryParams.state', 'playing');
+        }, 200)
+
+      }
+
+      _playingChanged(playing) {
+        this.set('queryParams.state', playing ? 'playing' : 'paused');
+        this.getTime(this.queryParams)
+      }
+
+      _stateChanged(state) {
+        this.playing = state === 'playing';
+        this.getTime(this.queryParams)
+      }
+    }
+    window.customElements.define(videoViewer.is, videoViewer);
+  </script>
+</dom-module>
