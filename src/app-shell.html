@@ -185,7 +185,7 @@
         if (window.innerWidth <= 640) {
           val = (window.innerWidth - 150) + "px"
         }
-        if (this.routeData.page !== "home" && this.routeData.page !== "") {
+        if (this.routeData.page !== "home"  || this.routeData.page !== "searsee.github.io" && this.routeData.page !== "") {
           val2 = (window.innerWidth - (this.$.drawer.getWidth() + 30)) + "px"
           if (window.innerWidth <= 640) {
             this.$.pageButton.hidden = false
