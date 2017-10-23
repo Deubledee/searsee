@@ -7,27 +7,21 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt-->
 
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
-<link rel="import" href="../../bower_components/iron-selector/iron-selector.html">
-<link rel="import" href="../../bower_components/google-signin/google-signin.html">
-<link rel="import" href="../../bower_components/google-signin/google-signin-aware.html">
-<link rel="import" href="../../bower_components/app-route/app-location.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html">
-<link rel="import" href="../../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../styles/shared-styles.html">
-<link rel="import" href="../components/youtube-search.html">
-<!--link rel="import" href="../components/youtube-channel.html"-->
-<link rel="import" href="../components/youtube-toolbar.html">
-<link rel="import" href="../components/page-video.html">
-<link rel="import" href="../components/page-search.html">
-
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../../../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../../../bower_components/google-signin/google-signin-aware.html">
+<link rel="import" href="../../../bower_components/app-route/app-location.html">
+<link rel="import" href="../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../../../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../styles/shared-styles.html">
 <dom-module id="my-youtube">
   <template id="page-template">
     <custom-style>
@@ -107,7 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           ;
         }
 
-      /*  paper-icon-button.top {
+        /*  paper-icon-button.top {
           background-color: #4385f4;
           --paper-icon-button-ink-color: white;
           position: absolute;
@@ -162,23 +156,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           transition: transform 0.3s;
         }
 
-        search-results {
+        page-search {
           display: block;
           padding: 4px 1px 1px 3px;
-        }
-
-        section {
-          padding-top: 1px;
-        }
-
-        nav {
-          width: 100%;
-          height: 100px;
-          background-color: gray;
-          position: absolute;
-          bottom: 0%;
-          margin-top: 200px
-        }
+        }        
 
         app-drawer-layout:not([narrow]) [drawer-toggle] {
           display: none;
@@ -197,46 +178,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       </style>
     </custom-style>
-    <app-location route="{{route}}"></app-location>
-    <!-- app-routes parse route paths based on the their `pattern`.
-        Parameters are extracted into the `data` object. The rest of the path that
-        comes after the `pattern` is put into the `tail` object, which can be
-        passed to the `route` property of downstream app-routes. -->
-    <app-route route="{{route}}" pattern="/:page" data="{{data}}"></app-route>
-    <app-route route="{{route}}" pattern="/search" tail="{{searchTail}}"></app-route>
-    <app-route route="{{route}}" pattern="/channels" tail="{{channelsTail}}"></app-route>
-    <app-route route="{{route}}" pattern="/video" tail="{{videoTail}}" active="{{videoPageActive}}"></app-route>
 
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
+    </app-route>
+    <!--*app-route /youtube/ - app link -->
+    <app-route route="{{route}}" pattern="/youtube/:app" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}">
+    </app-route>
+    <!--app-route /videos/-->
+    <app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}">
+    </app-route>
     <app-drawer-layout>
       <app-drawer id="drawer" slot="drawer">
-        <youtube-toolbar collapsed$="{{videoPageActive}}">
-        <youtube-search route="[[searchTail]]" api="[[list]]" hide="false" search="[[dataq]]" video-data="{{videoData}}">
-        </youtube-search>
-      </youtube-toolbar>
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
-        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home">Profile</a>
-          <a name="Search">Search</a>
-          <a name="login">Channel</a>
-          <a name="youtube">Favorites</a>
+        <iron-selector class="drawer-list" role="navigation">
+          <ul>
+            <li>
+              <a href="/youtube/search/list?api=search&q=fuck">youtube search</a>
+            </li>
+            <li>
+              <a href="/youtube/search/list?api=search&q=aloo">youtube search b</a>
+            </li>
+          </ul>
+
         </iron-selector>
-      </app-drawer>      
-      <main>
-        <section>
-          <article>
-            <page-video id="video" route="{{videoTail}}"></page-video>
-          </article>
-          <article>
-            <page-search id="search" items="{{videos}}"></page-search>
-          </article>
-          <article>
-            <youtube-search route="[[channelsTail]]" api="[[channel]]" hide="true" video-data="{{videoData}}">
-            </youtube-search>           
-          </article>
-        </section>
-      </main>
+      </app-drawer>
+      </app-header>
+      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+        <page-video name="video" id="video" route="{{routeTail}}">
+        </page-video>
+        <page-search name="search" id="search" route="{{routeTail}}">
+        </page-search>
+        <page-view404 name="view404"></page-view404>
+      </iron-pages>
     </app-drawer-layout>
 
     <!--code>google-signin-offline</code> events:
@@ -255,7 +231,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </google-signin-aware-->
   </template>
   <script>
-    class MyView1 extends Polymer.Element {
+    class pageYoutube extends Polymer.Element {
       static get is() {
         return 'my-youtube';
       }
@@ -266,6 +242,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       static get properties() {
         return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+            notify: true
+          },
           route: {
             type: Object,
             notify: true
@@ -273,37 +255,65 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           routePage: {
             type: Object
           },
-
-          videoData: {
+          rootPath: {
+            type: String,
+            value: "/"
+          },
+          pageTail: {
             type: Object,
-            observer: '_videoDataChanged',
+            notify: true
           },
-
-          videoPageActive: {
-            type: Boolean,
-            reflectToAttribute: true,
-            observer: '_videoPageActiveChanged'
+          pageQuery: {
+            type: Object,
+            notify: true,
+            //observer: 'log'
           },
-
+          pageData: {
+            type: Object,
+            notify: true,
+            observer: '_routePageChanged'
+          },
           searchTail: {
             type: Object,
             notify: true
           },
-
-          channelsTail: {
+          searchQuery: {
+            type: Object,
+            notify: true,
+            observer: 'logsh'
+          },
+          searchData: {
             type: Object,
             notify: true
           },
-
+          channelquery: {
+            type: Object,
+            notify: true,
+            observer: 'logch'
+          },
+          channelData: {
+            type: Object,
+            notify: true
+          },
+          channelTail: {
+            type: Object,
+            notify: true
+          },
           videoTail: {
             type: Object,
             notify: true
           },
-
+          videoquery: {
+            type: Object,
+            notify: true
+          },
+          videoRouteData: {
+            type: Object,
+            notify: true
+          },
           newCategory: {
             type: String
           },
-
           videos: {
             type: Array,
             value: function () {
@@ -313,7 +323,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           resize: {
             type: Boolean,
-            observer: '_messenger'
+            // observer: '_messenger'
           },
           dataq: {
             type: String,
@@ -325,65 +335,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             notify: true
           },
           data: {
-            type: Object,
-            value: function () {
-              return {
-                page: '/search/'
-              };
-            }
+            type: Object
           },
-          channel: {
-            type: Object,
-            value: function () {
-              return {
-                method: "channel",
-                api: "search",
-                type: "video"
-              }
-            }
+          datavid: {
+            type: Object
           },
-          list: {
+          query: {
             type: Object,
-            value: function () {
-              return {
-                method: "search",
-                api: "search",
-                type: "video"
-              }
-            }
+            // observer: 'log'
           }
         }
       };
 
+      static get observers() {
+        /* return [
+           '_routePageChanged(data.page)',
+         ];*/
+      }
+      log(data) {
+        console.log("queryParams", data)
+      }
+      logch(data) {
+        console.log("ch queryParams", data)
+      }
+      logsh(data) {
+        console.log("sh queryParams", data)
+      }
       attached() {
         // If we do not have an initial URL, we redirect to /search
         if (!this.route || !this.route.path) {
-          this.set('route.path', '/search/');
+          this.set('route.path', 'yotube/search/');
         }
-      }      
-      _messenger(data) {
-        console.log("got", data)
-        this.$.video.resize = data
       }
-      _videoDataChanged(data) {
-        var allVideos = [];
-        var that = this;
-        if (data)
-          console.log(data)
-        data.items.forEach(function (videoItem) {
-          var youtubeVideo = {
-            id: videoItem.id.videoId,
-            title: videoItem.snippet.title,
-            shortTitle: that.removeBadCharacters(videoItem.snippet.title.toLocaleLowerCase()) + " ...!!",
-            thumbnail: videoItem.snippet.thumbnails.medium.url,
-            channelTitle: videoItem.snippet.channelTitle.toLocaleLowerCase(),
-            channelId: videoItem.snippet.channelId,
-            videoItem: videoItem
-          };
-
-          allVideos.push(youtubeVideo);
-        })
-        this.set('videos', allVideos);
+      _messenger(data) {
+        //  console.log("got", data)
+        this.$.video.resize = data
       }
 
       removeBadCharacters(char) {
@@ -394,30 +380,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         })
         return arr2.join(" ")
       }
-      _videoPageActiveChanged(videoPageActive, previousValue) {
-        // change color of page on page change
-        var newColor;
-        this.routePage = "videos"
-        if (videoPageActive) {
-          // black
-          this.$.video.style.display = "block"
-          newColor = 0;
-        } else {
-          // white
-          newColor = 255;
-          this.$.video.style.display = ""
-        }
 
-        document.body.style.backgroundColor = 'rgb(' + newColor + ',' + newColor +
-          ',' + newColor + ')';
-        this.$.video.style.zIndex = 1
-        // on first load, set the color then allow color transition animations
-        if (previousValue === undefined) {
-          document.body.style.transition = 'background-color .2s linear';
-          return;
-        }
+      _routePageChanged(page) {
+        // console.log("page.app", page.app)
+        this.page = page.app !== "youtube" ? page.app : "search"
+        //console.log("pageData.app", this.pageData.app)       
       }
+
+      _pageChanged(page) {
+        var resolvedPageUrl = this.resolveUrl('page-' + page + '.html');
+        console.log("page changed", resolvedPageUrl)
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          null,
+          true);
+      }
+
     }
-    window.customElements.define(MyView1.is, MyView1);
+    window.customElements.define(pageYoutube.is, pageYoutube);
   </script>
 </dom-module>
