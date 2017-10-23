@@ -214,7 +214,7 @@
       _routePageChanged(page) {
         this.page = page === "searsee.github.io" ? "home" : this.subroute.prefix.split("/")[1] || "home"
         this._resize()
-        console.log("route", this.route)
+        console.log("this.routeData.page", this.routeData.page)
         //console.log("_routePageChanged subroute",this.subroute)a
         //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])       
       }
