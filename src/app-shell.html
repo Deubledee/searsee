@@ -214,12 +214,14 @@
           this.$[this.page].$.drawer.toggle()
         }
       }
-      _routePageChanged(page) {
-        this.page = page === "searsee.github.io" ? "home" : this.subroute.prefix.split("/")[1] || "home"
-        this._resize("likeHome")
-        console.log("route", this.route)
-        //console.log("_routePageChanged subroute",this.subroute)a
-        //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])       
+      _routePageChanged(page) {       
+        if(page === "searsee.github.io"){
+          this.page = "home"
+          this._resize("likeHome")
+        } else {
+          this.page = this.subroute.prefix.split("/")[1] || "home"
+        }        
+        console.log("route", this.route)      
       }
       _pageChanged(page) {
         console.log("_pageChanged", page)
