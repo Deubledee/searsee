@@ -17,7 +17,7 @@
       app-toolbar {
         color: #fff;
         background-color: var(--app-primary-color);
-       /* padding: 0px 6px;*/
+        /* padding: 0px 6px;*/
       }
 
       app-toolbar ul {
@@ -87,6 +87,7 @@
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}" queryParams="{{queryParams}}"></app-route>
 
     <!-- Drawer content -->
+    <!-- Drawer content -->
     <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
       <app-toolbar>Menu</app-toolbar>
 
@@ -95,22 +96,26 @@
       <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
         <a name="home" href="/home" on-click="_drToggle">home</a>
         <a name="login" href="/login" on-click="_drToggle">login</a>
-        <a name="youtube" href="/youtube/search" on-click="_drToggle">youtube</a>       
+        <a name="youtube" href="/youtube/search" on-click="_drToggle">youtube</a>
       </iron-selector>
-    </app-drawer>   
+    </app-drawer>
+    <app-header-layout>
       <app-header slot="header" effects="waterfall" condenses reveals>
+
         <app-toolbar id="toolbar">
           <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
           <paper-input id="val" class="right" label="Search all" value="{{someData}}"></paper-input>
           <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
         </app-toolbar>
+
       </app-header>
       <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
         <page-home name="home"></page-home>
         <page-login name="login"></page-login>
         <my-youtube id="youtube" name="youtube" dataq="{{someData}}" resize="[[resise]]"></my-youtube>
         <page-view404 name="view404"></page-view404>
-      </iron-pages>   
+      </iron-pages>
+    </app-header-layout>
   </template>
   <script>
     class AppShell extends Polymer.Element {
@@ -137,7 +142,7 @@
           rootPath: {
             type: String,
             value: "/"
-            },
+          },
           tail: {
             type: String,
             notify: true
@@ -203,19 +208,19 @@
         if ("drawer" in this.$[this.page].$) {
           if (window.innerWidth <= 640)
             this.$[this.page].$.drawer.style.top = "-56px"
-            this.$[this.page].$.drawer.toggle()
+          this.$[this.page].$.drawer.toggle()
         }
       }
       _routePageChanged(page) {
-        this.page = page === "searsee.github.io"? "home" : this.subroute.prefix.split("/")[1] || "home"        
+        this.page = page === "searsee.github.io" ? "home" : this.subroute.prefix.split("/")[1] || "home"
         this._resize()
-          console.log("route", this.route) 
-          //console.log("_routePageChanged subroute",this.subroute)a
-          //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])       
+        console.log("route", this.route)
+        //console.log("_routePageChanged subroute",this.subroute)a
+        //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])       
       }
       _pageChanged(page) {
-        console.log("_pageChanged",page)        
-        var resolvedPageUrl        
+        console.log("_pageChanged", page)
+        var resolvedPageUrl
         resolvedPageUrl = this.resolveUrl('routes/' + page + '/page-' + page + '.html')
         Polymer.importHref(
           resolvedPageUrl,
