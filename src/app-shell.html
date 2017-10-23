@@ -207,12 +207,11 @@
         }
       }
       _routePageChanged(page) {
-        this.page = page === "searsee.github.io"? "home" : this.subroute.prefix.split("/")[1] || "home"
-        
+        this.page = page === "searsee.github.io"? "home" : this.subroute.prefix.split("/")[1] || "home"        
         this._resize()
-          //console.log("_routePageChanged", page) 
+          console.log("route", route) 
           //console.log("_routePageChanged subroute",this.subroute)
-          //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])        
+          //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])       
       }
       _pageChanged(page) {
         console.log("_pageChanged",page)        
