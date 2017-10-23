@@ -215,13 +215,13 @@
         }
       }
       _routePageChanged(page) {       
-        if(page === "searsee.github.io" || "view404"){
+        if(page === "searsee.github.io"){
           this.page = "home"
           this._resize("likeHome")
-        } else {
-          this.page = this.subroute.prefix.split("/")[1] || "home"
+          return
         }        
-        console.log("route", this.route)      
+        this.page = this.subroute.prefix.split("/")[1] || "home"     
+        this._resize()                  
       }
       _pageChanged(page) {
         console.log("_pageChanged", page)

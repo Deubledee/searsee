@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host {
           --app-primary-color: rgb(207, 29, 23);
           --app-secondary-color: black;
+          --app-third-color: rgb(66, 133, 244);
           display: block;
         }
 
@@ -37,8 +38,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         app-toolbar {
-          color: rgb(255, 255, 255);
+          color:  var(--app-third-color);
           background-color: var(--app-primary-color);
+          font-size: 2em;
+          text-shadow: 1px 1px 0px yellow;
         }
 
         app-toolbar ul {
@@ -159,7 +162,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         page-search {
           display: block;
           padding: 4px 1px 1px 3px;
-        }        
+        }
 
         app-drawer-layout:not([narrow]) [drawer-toggle] {
           display: none;
@@ -193,16 +196,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
-        <iron-selector class="drawer-list" role="navigation">
-          <ul>
-            <li>
-              <a href="/youtube/search/list?api=search&q=fuck">youtube search</a>
-            </li>
-            <li>
-              <a href="/youtube/search/list?api=search&q=aloo">youtube search b</a>
-            </li>
-          </ul>
-
+        <app-toolbar>Youtube <paper-icon-button></paper-icon-button></app-toolbar>
+        <validate-input label="Search pages" value="{{routeData.page}}">          
+        </validate-input>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="home" href="/youtube/search/" on-click="_drToggle">home</a>
+          <a name="login" href="/youtube/video/" on-click="_drToggle">login</a>
+          <a name="youtube" href="/youtube/" on-click="_drToggle">youtube</a>
         </iron-selector>
       </app-drawer>
       </app-header>

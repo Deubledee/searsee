@@ -97,16 +97,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         color: #4c6e92;
         font-weight: bolder;
       }
+      youtube-toolbar{
+       
+      }
     </style>
 
     <app-route route="{{route}}" pattern="/:page" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}"></app-route>
-    <app-route route="{{route}}" pattern="/search/:page" data="{{searchData}}" tail="{{searchTail}}" query-params="{{searchQuery}}"></app-route>
-    <youtube-search route="[[pageTail]]" Label="search..." hide="true" search="[[dataq]]" video-data="{{videoData}}">
+    <app-route route="{{route}}" pattern="/search/:page" data="{{searchData}}" tail="{{searchTail}}" query-params="{{searchQuery}}"></app-route>    
     </youtube-search>
     <youtube-toolbar collapsed$="{{videoPageActive}}">
-
-    </youtube-toolbar>
     <paper-input id="val" label="Search all" value="{{searchQuery.q}}"></paper-input>
+    <youtube-search route="[[pageTail]]" Label="search..." hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+    </youtube-toolbar>
+    
     <template is="dom-repeat" items="{{items}}" as="video">
       <!-- The '#' is included because the use-hash-as-path property is
       set to true in the app-location -->
