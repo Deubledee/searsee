@@ -207,16 +207,16 @@
         }
       }
       _routePageChanged(page) {
-       // this.page = this.subroute.prefix.split("/")[1] || "home"
+        this.page = page === "searsee.github.io"? "home" : this.subroute.prefix.split("/")[1] || "home"
+        
         this._resize()
-          console.log("_routePageChanged page", page) 
+          //console.log("_routePageChanged", page) 
           //console.log("_routePageChanged subroute",this.subroute)
           //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])        
       }
       _pageChanged(page) {
         console.log("_pageChanged",page)        
         var resolvedPageUrl        
-        resolvedPageUrl = page === "searsee.github.io.html" ? this.resolveUrl('routes/page-home.html') :
         resolvedPageUrl = this.resolveUrl('routes/' + page + '/page-' + page + '.html')
         Polymer.importHref(
           resolvedPageUrl,
