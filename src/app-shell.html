@@ -219,7 +219,7 @@
       }
       _pageChanged(page) {
         //console.log("_pageChanged",page)
-        var resolvedPageUrl = this.resolveUrl('routes/page-' + page + '.html');
+        var resolvedPageUrl = this.resolveUrl('routes/' + page + '/page-' + page + '.html');
         Polymer.importHref(
           resolvedPageUrl,
           null,

@@ -1,0 +1,251 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../components/youtube-search.html">
+<link rel="import" href="../../components/youtube-toolbar.html">
+<dom-module id="page-search">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #f6f9ff;
+        background-color: var(--app-primary-color);
+        @apply --layout-horizontal;
+        @apply --layout-center-center;
+        @apply --layout-wrap;
+      }
+
+      a {
+        color: black;
+        text-decoration: none;
+      }
+
+      .nav {
+        float: left;
+        width: 100%;
+        font-size: 14px;
+      }
+
+      .card-content {
+        width: 88%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 5px;
+        font-size: 14px;
+      }
+
+      .contentView {
+        z-index: 1;
+        font-style: italic;
+        flex-grow: 7;
+        font-size: 14px;
+        /* background-color: #71a17b; */
+        color: #b77b7b;
+        margin-right: 3px;
+        font-weight: bolder;
+      }
+
+      .channelView {
+        z-index: 1;
+        font-style: italic;
+        flex-grow: 7;
+        font-size: 14px;
+        color: #7b1e1e;
+        margin-right: 3px;
+        font-weight: bolder;
+      }
+
+      .channelViewTitle {
+        font-size: 13px;
+        color: #4c6e92;
+        font-weight: bolder;
+      }
+
+      section {
+        padding-top: 1px;
+      }
+
+      nav {
+        width: 100%;
+        height: 100px;
+        background-color: gray;
+        position: absolute;
+        bottom: 0%;
+        margin-top: 200px
+      }
+      .channelView {
+        z-index: 1;
+        font-style: italic;
+        flex-grow: 7;
+        font-size: 14px;
+        color: #7b1e1e;
+        margin-right: 3px;
+        font-weight: bolder;
+      }
+      .channelViewTitle {
+        font-size: 13px;
+        color: #4c6e92;
+        font-weight: bolder;
+      }
+    </style>
+
+    <app-route route="{{route}}" pattern="/:page" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}"></app-route>
+    <app-route route="{{route}}" pattern="/search/:page" data="{{searchData}}" tail="{{searchTail}}" query-params="{{searchQuery}}"></app-route>
+    <youtube-search route="[[pageTail]]" Label="search..." hide="true" search="[[dataq]]" video-data="{{videoData}}">
+    </youtube-search>
+    <youtube-toolbar collapsed$="{{videoPageActive}}">
+
+    </youtube-toolbar>
+    <paper-input id="val" label="Search all" value="{{searchQuery.q}}"></paper-input>
+    <template is="dom-repeat" items="{{items}}" as="video">
+      <!-- The '#' is included because the use-hash-as-path property is
+      set to true in the app-location -->
+
+      <a href="youtube/video/{{video.id}}">
+        <paper-card class="nav" image="{{video.thumbnail}}">
+          <div class="card-content" title="{{video.title}}">
+            <span class="contentView"> {{video.shortTitle}} </span>
+            <P>
+              <a href="../channels/{{video.channelId}}">
+                <span class="channelView">
+                  <b>Chanel:</b>
+                </span>
+                <span class="channelViewTitle">{{video.channelTitle}} </span>
+              </a>
+            </P>
+          </div>
+        </paper-card>
+      </a>
+
+    </template>
+  </template>
+  <script>
+    class pageSearch extends Polymer.Element {
+      static get is() {
+        return 'page-search';
+      }
+
+      constructor() {
+        super();
+      }
+
+      static get properties() {
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+            notify: true
+          },
+          pageTail: {
+            type: Object,
+            notify: true
+          },
+          pageQuery: {
+            type: Object,
+            notify: true
+          },
+          pageData: {
+            type: Object,
+            notify: true
+          },
+          searchTail: {
+            type: Object,
+            notify: true
+          },
+          searchQuery: {
+            type: Object,
+            notify: true
+          },
+          searchata: {
+            type: Object,
+            notify: true
+          },
+          items: {
+            type: Array,
+            obsever: '_seethisshit'
+          },
+          videoData: {
+            type: Object,
+            observer: '_videoDataChanged',
+          },
+          channel: {
+            type: Object,
+            value: function () {
+              return {
+                method: "channel",
+                api: "search",
+                type: "video"
+              }
+            }
+          },
+          list: {
+            type: Object,
+            value: function () {
+              return {
+                method: "search",
+                api: "search",
+                type: "video"
+              }
+            }
+          }
+        }
+      }
+
+      _seethisshit() {
+        // window.scrollTo(0)
+        /* this.items.map(data => {
+            console.log(data, "hey..!")
+          })*/
+      }
+      _videoDataChanged(data) {
+        console.log("resuslts", data)
+
+        /*
+        var allVideos = [];
+        var that = this;
+        if (data)
+          // console.log(data)
+          data.items.forEach(function (videoItem) {
+            var youtubeVideo = {
+              id: videoItem.id.videoId,
+              title: videoItem.snippet.title,
+              shortTitle: that.removeBadCharacters(videoItem.snippet.title.toLocaleLowerCase()) + " ...!!",
+              thumbnail: videoItem.snippet.thumbnails.medium.url,
+              channelTitle: videoItem.snippet.channelTitle.toLocaleLowerCase(),
+              channelId: videoItem.snippet.channelId,
+              videoItem: videoItem
+            };
+
+            allVideos.push(youtubeVideo);
+          })
+        this.set('videos', allVideos);*/
+      }
+      _routePageChanged(page) {
+        console.log("page route changed", page)
+        console.log("route changed", this.route)
+        console.log("pageData.page route changed", this.pageData.page)
+      }
+      _pageChanged(page) {
+        console.log("page changed", page)
+        console.log("pageData.page changed", this.pageData.page)
+      }
+
+    }
+    window.customElements.define(pageSearch.is, pageSearch);
+  </script>
+</dom-module>
