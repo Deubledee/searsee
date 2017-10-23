@@ -174,7 +174,7 @@
           this._resize()
         }).bind(this)
       }
-      _resize() {
+      _resize(likeHome) {
         let elem = this.$.val, val, val2
         val = (parseFloat(window.innerWidth) / 2.5) + "px"
         this.$.pageButton.hidden = true
@@ -185,16 +185,19 @@
         if (window.innerWidth <= 640) {
           val = (window.innerWidth - 150) + "px"
         }
-        if (this.routeData.page !== "home"  || this.routeData.page !== "searsee.github.io" && this.routeData.page !== "") {
+        if (this.routeData.page !== "searsee.github.io" && this.routeData.page !== "") {
           val2 = (window.innerWidth - (this.$.drawer.getWidth() + 30)) + "px"
           if (window.innerWidth <= 640) {
             this.$.pageButton.hidden = false
             val2 = this.$.toolbar.style.width = (window.innerWidth - 5) + "px"
           }
+
           this.$.toolbar.style.width = val2
           this.$.toolbar.style.float = "right"
           // console.log(this.routeData.page, this.$.toolbar.style.width, (window.innerWidth - (this.$.drawer.getWidth() + 30)))
-        } else {
+          
+        } 
+        if(likeHome || this.routeData.page === "home") {
           this.$.toolbar.style.width = (window.innerWidth - 32) + "px"
           // console.log(this.routeData.page, this.$.toolbar.style.width, window.innerWidth, this.$.drawer.getWidth())
         }
@@ -213,8 +216,8 @@
       }
       _routePageChanged(page) {
         this.page = page === "searsee.github.io" ? "home" : this.subroute.prefix.split("/")[1] || "home"
-        this._resize()
-        console.log("this.routeData.page", this.routeData.page)
+        this._resize("likeHome")
+        console.log("route", this.route)
         //console.log("_routePageChanged subroute",this.subroute)a
         //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])       
       }
