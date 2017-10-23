@@ -215,8 +215,9 @@
           //console.log("_routePageChanged subroute 2",this.subroute.prefix.split("/")[1])        
       }
       _pageChanged(page) {
-        //console.log("_pageChanged",page)
-        var resolvedPageUrl = this.resolveUrl('routes/' + page + '/page-' + page + '.html');
+        console.log("_pageChanged",page)
+        var resolvedPageUrl        
+        resolvedPageUrl = this.resolveUrl('routes/' + page + '/page-' + page + '.html');
         Polymer.importHref(
           resolvedPageUrl,
           null,
