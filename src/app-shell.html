@@ -91,7 +91,7 @@
     <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
       <app-toolbar>Menu</app-toolbar>
 
-      <validate-input label="Search pages" value="{{routeData.page}}"></validate-input>
+      <validate-input label="Search pages" value="{{routeData.page}}" jason-data="[[jasonData]]"></validate-input>
 
       <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
         <a name="home" href="/home" on-click="_drToggle">home</a>
@@ -151,6 +151,33 @@
             type: String,
             value: "",
             notify: true
+          },
+          jsonData: {
+            type: Object,
+            notify: true,
+            value: function () {
+              return {
+                searches: [
+                  "youtube",
+                  "searchYouTube",
+                  "video",
+                  "home",
+                  "login"
+                ],
+                alter: {
+                  "searchyoutube": {
+                    value: "searchYouTube"
+                  },
+                  "search": {
+                    op: "youtube",
+                    value: "searchYouTube"
+                  },
+                  "vídeo": {
+                    value: "video"
+                  }
+                }
+              }
+            }
           }
         };
       }
@@ -173,6 +200,12 @@
         window.onresize = (function (event) {
           this._resize()
         }).bind(this)
+        window.onbeforeunload = function (e) {
+          return "Do you really want to leave our brilliant application?"
+          //if we return nothing here (just calling return;) then there will be no pop-up question at all
+          //return;
+        };
+
       }
       _resize(likeHome) {
         let elem = this.$.val, val, val2
@@ -186,7 +219,7 @@
           val = (window.innerWidth - 150) + "px"
         }
         if (this.routeData.page !== "searsee.github.io" && this.routeData.page !== "") {
-          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 30)) + "px"
+          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 35)) + "px"
           if (window.innerWidth <= 640) {
             this.$.pageButton.hidden = false
             val2 = this.$.toolbar.style.width = (window.innerWidth - 5) + "px"
@@ -195,9 +228,9 @@
           this.$.toolbar.style.width = val2
           this.$.toolbar.style.float = "right"
           // console.log(this.routeData.page, this.$.toolbar.style.width, (window.innerWidth - (this.$.drawer.getWidth() + 30)))
-          
-        } 
-        if(likeHome || this.routeData.page === "home") {
+
+        }
+        if (likeHome || this.routeData.page === "home") {
           this.$.toolbar.style.width = (window.innerWidth - 32) + "px"
           // console.log(this.routeData.page, this.$.toolbar.style.width, window.innerWidth, this.$.drawer.getWidth())
         }
@@ -214,19 +247,20 @@
           this.$[this.page].$.drawer.toggle()
         }
       }
-      _routePageChanged(page) {       
-        if(page === "searsee.github.io"){
+      _routePageChanged(page) {
+        if (page === "searsee.github.io") {
           this.page = "home"
           this._resize("likeHome")
           return
-        }        
-        this.page = this.subroute.prefix.split("/")[1] || "home"     
-        this._resize()                  
+        }
+        this.page = this.subroute.prefix.split("/")[1] || "home"
+        this._resize()
       }
       _pageChanged(page) {
         console.log("_pageChanged", page)
         var resolvedPageUrl
-        resolvedPageUrl = this.resolveUrl('routes/' + page + '/page-' + page + '.html')
+        resolvedPageUrl = page === "login" || page === "home" ? this.resolveUrl('routes/page-' + page + '.html') :
+          this.resolveUrl('routes/' + page + '/page-' + page + '.html')
         Polymer.importHref(
           resolvedPageUrl,
           null,

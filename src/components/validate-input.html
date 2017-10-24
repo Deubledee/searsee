@@ -14,7 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <dom-module id="validate-input">
     <template>
         <style is="custom-style">
-             :host {
+            :host {
                 display: inline-block;
             }
 
@@ -28,7 +28,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 border: 2px solid var(--google-green-500);
             }
         </style>
-        <search-validator id="validator" values="{{value}}" valid={{invalid}}></search-validator>
+        <search-validator id="validator" values="{{value}}" valid={{invalid}} json-data="[[jsonData]]"></search-validator>
         <paper-input id="input" label="{{label}}" value="{{search}}" on-click="clear"></paper-input>
     </template>
     <script>
@@ -55,7 +55,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     search: {
                         type: String,
                         observer: 'setValue'
-                    }
+                    },
+                    jsonData: {
+                        type: Object,
+                        notify: true,
+                        value: function () {
+                          return {
+                            searches: [],
+                            alter: {}
+                          }
+                        }
+                      }
                 }
             }
 

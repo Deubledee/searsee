@@ -2,29 +2,7 @@
 <link rel="import" href="../../bower_components/iron-validator-behavior/iron-validator-behavior.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 <dom-module id="search-validator">
-    <script>
-        const jsondata = {
-            searches: [
-                "youtube",
-                "searchYouTube",
-                "video",
-                "home",
-                "login"
-            ],
-            alter: {
-                "searchyoutube": {
-                    value: "searchYouTube"
-                },
-                "search": {
-                    op: "youtube",
-                    value: "searchYouTube"
-                },
-                "vídeo": {
-                    value: "video"
-                }
-
-            }
-        }
+    <script>        
         class searchValidator extends Polymer.Element {
             static get is() {
                 return 'search-validator'
@@ -40,13 +18,14 @@
                         type: String,
                         observer: 'validate',
                         notify: true
-                    }
+                    },
+                    jsonData:Object
                 }
             }
 
             validate(obj) {
                 var valid = false
-                jsondata.searches.map((page) =>{
+                this.jsonData.searches.map((page) =>{
                     if (obj !== page) {
                         if (valid === false)
                             valid = this.checkAlter("object", obj);
@@ -60,8 +39,8 @@
             checkAlter(type, values) {
                 var valid
                 var value
-                if (values in jsondata.alter) {
-                    value = jsondata.alter[values].value
+                if (values in this.jsonData.alter) {
+                    value = this.jsonData.alter[values].value
                     valid = true
                 } else {
                     valid = false

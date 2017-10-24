@@ -18,7 +18,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/app-layout/app-toolbar/app-toolbar.html">
 <link rel="import" href="../../../bower_components/app-layout/app-drawer/app-drawer.html">
 <link rel="import" href="../../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../styles/shared-styles.html">
@@ -36,9 +35,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         app-drawer-layout:not([narrow]) [drawer-toggle] {
           display: none;
         }
+        iron-pages {
+          transition: transform 0.3s;
+        }
 
+        page-search {
+          display: block;
+          padding: 4px 1px 1px 3px;
+        }
+
+        app-drawer {
+          --app-drawer-content-container: {
+            background-color: rgb(253, 250, 250);
+            ;
+          }
+        }
+
+        app-drawer.lower {
+          top: 4em;
+          /* position: relative; */
+        }
         app-toolbar {
-          color:  var(--app-third-color);
+          color: var(--app-third-color);
           background-color: var(--app-primary-color);
           font-size: 2em;
           text-shadow: 1px 1px 0px yellow;
@@ -67,8 +85,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           margin-left: 2px;
         }
 
+        paper-input#val {
+          background-color: #0000;
+          margin-left: 2px;
+        }
+
         app-drawer {
-          z-index: 1
+          z-index: 1;
+          padding-right: 2px
         }
 
         .drawer-list {
@@ -86,38 +110,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .drawer-list a.iron-selected {
           color: black;
           font-weight: bold;
-        }
-
-        app-header {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          height: 212px;
-          color: #fff;
-          background-color: #3f51b5;
-          /* https://bugs.chromium.org/p/chromium/issues/detail?id=637072 */
-          --app-header-background-front-layer: {
-            background-image: url(https://app-layout-assets.appspot.com/assets/bg1.jpg);
-            background-position: left center;
-          }
-          ;
-        }
-
-        /*  paper-icon-button.top {
-          background-color: #4385f4;
-          --paper-icon-button-ink-color: white;
-          position: absolute;
-          top: 13px;
-          left: 0px;
-        }*/
-
-        app-toolbar.tall {
-          height: 148px;
-        }
-
-        sample-content {
-          padding-top: 212px;
         }
 
         [main-title] {
@@ -154,31 +146,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         :host([video-page-active]) iron-pages {
           transform: translateY(-170px);
         }
-
-        iron-pages {
-          transition: transform 0.3s;
-        }
-
-        page-search {
-          display: block;
-          padding: 4px 1px 1px 3px;
-        }
-
-        app-drawer-layout:not([narrow]) [drawer-toggle] {
-          display: none;
-        }
-
-        app-drawer {
-          --app-drawer-content-container: {
-            background-color: rgb(253, 250, 250);
-            ;
-          }
-        }
-
-        app-drawer.lower {
-          top: 4em;
-          /* position: relative; */
-        }
       </style>
     </custom-style>
 
@@ -196,26 +163,31 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
-        <app-toolbar>Youtube <paper-icon-button></paper-icon-button></app-toolbar>
-        <validate-input label="Search pages" value="{{routeData.page}}">          
+        <youtube-toolbar collapsed$="{{videoPageActive}}">
+          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+          <a href="/youtube/search/list?api=search&q=">
+            <paper-input id="val" label="search..." value="{{query.q}}"></paper-input>
+          </a>
+        </youtube-toolbar>
+
+        <validate-input label="Search pages" value="{{routeTail.path}}">
         </validate-input>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home" href="/youtube/search/" on-click="_drToggle">home</a>
-          <a name="login" href="/youtube/video/" on-click="_drToggle">login</a>
-          <a name="youtube" href="/youtube/" on-click="_drToggle">youtube</a>
+          <a name="home" href="/youtube/search/" on-click="_drToggle">search</a>
+          <a name="login" href="/youtube/channel/" on-click="_drToggle">channel</a>
+          <a name="youtube" href="/youtube/profile/" on-click="_drToggle">profile</a>
         </iron-selector>
       </app-drawer>
-      </app-header>
+
       <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
         <page-video name="video" id="video" route="{{routeTail}}">
         </page-video>
-        <page-search name="search" id="search" route="{{routeTail}}">
+        <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}">
         </page-search>
         <page-view404 name="view404"></page-view404>
       </iron-pages>
-    </app-drawer-layout>
-
-    <!--code>google-signin-offline</code> events:
+      </div>
+      <!--code>google-signin-offline</code> events:
     <span>{{offlineCode}}</span>
     </p>
     <p>Only display "not signed in" element after auth state is initialized (avoid flickering):
@@ -224,7 +196,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <p>
       <button on-click="disconnect">Disconnect to start over</button>
     </p-->
-    <!--google-signin-aware scopes="{{scope}}" openid-prompt="{{openidPromptValue}}" initialized="{{initialized}}" signed-in="{{signedIn}}"
+      <!--google-signin-aware scopes="{{scope}}" openid-prompt="{{openidPromptValue}}" initialized="{{initialized}}" signed-in="{{signedIn}}"
       offline="{{offline}}" is-authorized="{{isAuthorized}}" need-additional-auth="{{needAdditionalAuth}}" on-google-signin-aware-error="handleSignInError"
       on-google-signin-aware-success="handleSignIn" on-google-signin-offline-success="handleOffline" on-google-signin-aware-signed-out="handleSignOut"
       on-signed-in-changed="handleStateChange" on-initialized-changed="handleStateChange">
@@ -252,9 +224,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Object,
             notify: true
           },
-          routePage: {
-            type: Object
+          data: {
+            type: Object,
+            notify: true
           },
+          routeTail: {
+            type: Object,
+            notify: true
+          },          
           rootPath: {
             type: String,
             value: "/"
@@ -314,6 +291,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           newCategory: {
             type: String
           },
+          videoData: {
+            type: Object,
+            observer: '_videoDataChanged',
+          },
           videos: {
             type: Array,
             value: function () {
@@ -352,24 +333,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            '_routePageChanged(data.page)',
          ];*/
       }
-      log(data) {
-        console.log("queryParams", data)
-      }
-      logch(data) {
-        console.log("ch queryParams", data)
-      }
-      logsh(data) {
-        console.log("sh queryParams", data)
-      }
-      attached() {
-        // If we do not have an initial URL, we redirect to /search
-        if (!this.route || !this.route.path) {
-          this.set('route.path', 'yotube/search/');
-        }
-      }
-      _messenger(data) {
-        //  console.log("got", data)
-        this.$.video.resize = data
+      _videoDataChanged(data) {
+        var allVideos = [];
+        var that = this;
+        if (data)
+          // console.log(data)
+          data.items.forEach(function (videoItem) {
+            var youtubeVideo = {
+              id: videoItem.id.videoId,
+              title: videoItem.snippet.title,
+              shortTitle: that.removeBadCharacters(videoItem.snippet.title.toLocaleLowerCase()) + " ...!!",
+              thumbnail: videoItem.snippet.thumbnails.medium.url,
+              channelTitle: videoItem.snippet.channelTitle.toLocaleLowerCase(),
+              channelId: videoItem.snippet.channelId,
+              videoItem: videoItem
+            };
+
+            allVideos.push(youtubeVideo);
+          })
+        this.set('videos', allVideos);
       }
 
       removeBadCharacters(char) {
@@ -379,6 +361,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           arr2.push(item.match(/\w[A-z]*/))
         })
         return arr2.join(" ")
+      }
+
+      attached() {
+        // If we do not have an initial URL, we redirect to /search
+        if (!this.route || !this.route.path) {
+          this.set('route.path', 'yotube/search/');
+        }
+      }
+      _messenger(data) {
+        //  console.log("got", data)
+        this.$.video.resize = data
       }
 
       _routePageChanged(page) {
