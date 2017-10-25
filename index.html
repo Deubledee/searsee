@@ -82,7 +82,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <body>
     <script>
-
+        var state = {
+          path: window.location.pathname,
+          reload: false
+        }
+        console.log(state.path)
+        if (state.path !== '/' || state.path !== '/searsee.github.io/') {
+        /*  window.history.pushState({}, null, '/home')
+          window.dispatchEvent(new CustomEvent('location-changed'));
+          state.reload = true*/
+        }
     window.Polymer = {
       rootPath: '/',
       state: state
