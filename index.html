@@ -86,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           path: window.location.pathname,
           reload: false
         }
-        if (state.path !== '/') {
+        if (state.path !== '/' || state.path !== '/searsee.github.io/') {
           window.history.pushState({}, null, '/home')
           window.dispatchEvent(new CustomEvent('location-changed'));
           state.reload = true
