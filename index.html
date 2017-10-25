@@ -52,9 +52,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="msapplication-TileImage" content="/images/manifest/mstile-144x144.png">
   <meta name="msapplication-TileColor" content="#FFF">
   <meta name="msapplication-tap-highlight" content="no">
-
+  <script>
+      var state = {
+        path: window.location.pathname,
+        reload: false
+      }
+      if (state.path !== '/') {
+        window.history.pushState({}, null, '/home')
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        state.reload = true
+      }
+  </script>
   <!-- Load webcomponents-loader.js to check and load any polyfills your browser needs -->
-  <script src="./bower_components/webcomponentsjs/webcomponents-loader.js" async></script>  
+  <script src="./bower_components/webcomponentsjs/webcomponents-loader.js" async></script>
   <script src="cordova.js" async></script>
   <script>
     if ('serviceWorker' in navigator) {
@@ -64,7 +74,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
   </script>
 
- 
+
 
   <!-- Add any global styles for body, document, etc. -->
   <style>
@@ -82,9 +92,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 </head>
 
 <body>
-  <script>
+  <script>  
     window.Polymer = {
-      rootPath: '/'
+      rootPath: '/',
+      state: state
     };
   </script>
   <app-shell>
@@ -93,8 +104,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <noscript>Looks like you don't have javascript enabled</noscript>
     </div>
   </app-shell>
-   <!-- Load your application shell -->
-   <link rel="import" href="./src/app-shell.html" async>
+  <!-- Load your application shell -->
+  <link rel="import" href="./src/app-shell.html" async>
   <script>
     window.performance && performance.mark && performance.mark('index.html');
   </script>

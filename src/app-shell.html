@@ -1,5 +1,5 @@
 <link rel="import" href="routes/page-home.html">
-<link rel="import" href="components/validate-input.html">
+<link rel="import" href="youtube/components/validate-input.html">
 <link rel="import" href="imports.html">
 <dom-module id="app-shell">
   <template>
@@ -17,7 +17,7 @@
       app-toolbar {
         color: #fff;
         background-color: var(--app-primary-color);
-        /* padding: 0px 6px;*/
+       /* padding: 2px 6px;*/
       }
 
       app-toolbar ul {
@@ -219,7 +219,7 @@
           val = (window.innerWidth - 150) + "px"
         }
         if (this.routeData.page !== "searsee.github.io" && this.routeData.page !== "") {
-          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 35)) + "px"
+          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 50)) + "px"
           if (window.innerWidth <= 640) {
             this.$.pageButton.hidden = false
             val2 = this.$.toolbar.style.width = (window.innerWidth - 5) + "px"
@@ -231,7 +231,7 @@
 
         }
         if (likeHome || this.routeData.page === "home") {
-          this.$.toolbar.style.width = (window.innerWidth - 32) + "px"
+          this.$.toolbar.style.width = (window.innerWidth - 10) + "px"
           // console.log(this.routeData.page, this.$.toolbar.style.width, window.innerWidth, this.$.drawer.getWidth())
         }
         elem.style.width = val
@@ -248,18 +248,22 @@
         }
       }
       _routePageChanged(page) {
+        let loadPage
         if (page === "searsee.github.io") {
           this.page = "home"
           this._resize("likeHome")
           return
         }
-        this.page = this.subroute.prefix.split("/")[1] || "home"
+
+        loadPage = this.subroute.prefix.split("/")[1] || "home"
+    
+        this.page = loadPage //|| Polymer.path.
         this._resize()
       }
       _pageChanged(page) {
-        console.log("_pageChanged", page)
+        console.log(page)
         var resolvedPageUrl
-        resolvedPageUrl = page === "login" || page === "home" ? this.resolveUrl('routes/page-' + page + '.html') :
+        resolvedPageUrl = page === "login" || page === "home" || page === "view404" ? this.resolveUrl('routes/page-' + page + '.html') :
           this.resolveUrl('routes/' + page + '/page-' + page + '.html')
         Polymer.importHref(
           resolvedPageUrl,

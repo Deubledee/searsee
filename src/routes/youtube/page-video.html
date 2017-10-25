@@ -81,7 +81,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     provides this route decides where this element lives in the URL space. In
     this case, the parent, which uses hashes, matches #/video and hence this
     element lives in <App serving point>?querParams#/video/:vid -->
-    <app-route route="{{route}}" pattern="/:vid" data="{{data}}" query-params="{{queryParams}}" active="{{videoPageActive}}">
+    <app-route route="{{route}}" pattern="/:vid" data="{{data}}" tail="{{videoTail}}"query-params="{{queryParams}}" active="{{videoPageActive}}">
     </app-route>
 
     <!-- You can bind any element's state into the URL by binding their
@@ -286,17 +286,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _playingChanged(playing) {
-        this.set('queryParams.state', playing ? 'playing' : 'paused');
-        this.getTime(this.queryParams)
+        console.log(playing)
+    /*    this.set('queryParams.state', playing ? 'playing' : 'paused');
+        this.getTime(this.queryParams)*/
       }
 
       _stateChanged(state) {
-        this.playing = state === 'playing';
-        this.getTime(this.queryParams)
+        console.log(state)
+     /*   this.playing = state === 'playing';
+        this.getTime(this.queryParams)*/
       }
       _videoPageActiveChanged(videoPageActive, previousValue) {
+        console.log(videoPageActive, previousValue)
         // change color of page on page change
-        var newColor;
+     /*   var newColor;
         this.routePage = "videos"
         if (videoPageActive) {
           // black
@@ -315,7 +318,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (previousValue === undefined) {
           document.body.style.transition = 'background-color .2s linear';
           return;
-        }
+        }*/
       }
     }
     window.customElements.define(pageVideo.is, pageVideo);
