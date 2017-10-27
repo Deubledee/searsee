@@ -13,8 +13,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../../bower_components/app-route/app-route.html">
 <dom-module id="youtube-search">
   <template>
-    <style> 
-       :host {        
+    <style>
+      :host {
         --primary-color: #000000;
         --paper-input-container-color: #000000;
         display: block;
@@ -28,34 +28,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </style>
     <!-- This app-route consumes the route which was provided by the tail of
     a app-route in the host of this element -->
-        <!-- 
+    <!-- 
     /*
     *app-route /search/
     */
     -->
-    <app-route 
-      route="{{route}}" 
-      pattern="/:page"
-      data="{{searchData}}"
-      tail="{{searchTail}}" 
-      query-params="{{searchQuery}}">
-  </app-route> 
+    <app-route route="{{route}}" pattern="/:page" data="{{searchData}}" tail="{{searchTail}}" query-params="{{searchQuery}}">
+    </app-route>
     <!-- 
     /*
     *app-route /channels/
     */
-    -->  
-    <iron-ajax auto 
-      id="youtubeSearch"
-      url="[[url]]" 
-      params="[[params]]"
-      last-response="{{videoData}}">
+    -->
+    <iron-ajax auto id="youtubeSearch" url="[[url]]" params="[[params]]" last-response="{{videoData}}">
     </iron-ajax>
-    
+
   </template>
 
   <script>
-   class youtubeSearch extends Polymer.Element{    
+    class youtubeSearch extends Polymer.Element {
 
       static get is() {
         return 'youtube-search';
@@ -66,95 +57,109 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       static get properties() {
-          return{
-            route: {
-              type: Object,
-              notify: true
-            },
-            data: {
-              type: Object
-            },
-            page: {
-              type: String,
-              reflectToAttribute: true,
-              observer: '_pageChanged',
-              notify: true
-            },
-            url: {
-              type: String,
-              notify: true
-            },
-            category: {
-              type: String,
-              notify: true
-            },
-            label: {
-              type: String,
-              notify: true
-            },
-            hidden: String,
-            hide: {
-              type: String,
-              observer: '_hide'
-            },
-            searchQuery: {
-              type: String,
-              observer: 'query',
-            },        
-            search: {
-              type: String,
-              observer: 'query',
-            },
-            api: {
-              type: Object,
-            },
-            searchData:{
-              type: Object,
-              //observer:'query(data.searchQuery)'
-            },
-            params: {
-              type: String,
-              notify: true 
-            },
-            videoData: {
-              type: Object,
-              notify: true
+        return {
+          route: {
+            type: Object,
+            notify: true
+          },
+          data: {
+            type: Object
+          },
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+            notify: true
+          },
+          url: {
+            type: String,
+            notify: true
+          },
+          category: {
+            type: String,
+            notify: true
+          },
+          label: {
+            type: String,
+            notify: true
+          },
+          hidden: String,
+          hide: {
+            type: String,
+            observer: '_hide'
+          },
+          searchQuery: {
+            type: String,
+            observer: 'query',
+          },
+          search: {
+            type: String,
+            observer: 'queryon',
+          },
+          api: {
+            type: Object,
+            value: function () {
+              return {
+                method: "",
+                api: ""
+              }
+            }
+          },
+          searchData: {
+            type: Object,
+            //observer:'query(data.searchQuery)'
+          },
+          params: {
+            type: String,
+            notify: true
+          },
+          videoData: {
+            type: Object,
+            notify: true
           }
         }
       }
-      observers(){ 
+      observers() {
         return ['_pathChanged(route.path)']
       }
-      _pathChanged(data) {     
-        console.log(data)  
+      _pathChanged(data) {
         this.async(function () {
           if (!this.route.path) {
             this.set('route.path', '/youtube/');
           }
         });
-      }      
+      }
       _hide(state) {
         if (state === "false") {
           this.set("hidden", "")
-        } else {          
+        } else {
           this.set("hidden", "hidden")
-        }        
+        }
+      }
+
+      queryon(data) {        
+        if (this.api.method.length > 0) {
+          let method, query;
+          method = "_" + this.api.method
+          query = data
+          this.set("url", `https://www.googleapis.com/youtube/v3/${this.api.api}/`)
+          this.params = this[method](query)
+        }
       }
 
       query(data) {
-        let method, query;                      
+        let method, query;
         if (!data.api) {
-          data = {api: "search"}
+          data = { api: "search" }
           method = "_" + "list"
           query = ""
-       } else {
-        method = "_" + this.searchData.page,
-        query = data.q          
+        } else {
+          method = "_" + this.searchData.page,
+            query = data.q
         }
-        console.log(data)
         this.set("url", `https://www.googleapis.com/youtube/v3/${data.api}/`)
-        this.params =  this[method](query)
-      }     
+        this.params = this[method](query)
+      }
       _channel(data) {
         return {
           part: 'snippet',
@@ -176,9 +181,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _videoDetails(data) {
+        console.log("got here..!!", data)
         return {
-          part: 'contentDetails',  
-          id: data,       
+          part: 'contentDetails',
+          id: data,
           key: 'AIzaSyAvZS0WP2y0M9Yczpi8F-4JeagLnFCDMwU', //'AIzaSyAuecFZ9xJXbGDkQYWBmYrtzOGJD-iDIgI',
         }
       }

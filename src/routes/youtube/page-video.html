@@ -7,22 +7,23 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-<link rel="import" href="../../bower_components/iron-flex-layout/iron-flex-layout.html">
-<link rel="import" href="../../bower_components/polymer/polymer.html">
-<link rel="import" href="../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
-<link rel="import" href="../../bower_components/paper-styles/color.html">
-<link rel="import" href="../../bower_components/paper-input/paper-input.html">
-<link rel="import" href="../../bower_components/paper-toggle-button/paper-toggle-button.html">
-<link rel="import" href="../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../bower_components/iron-flex-layout/iron-flex-layout.html">
+<link rel="import" href="../../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../../bower_components/polymer/lib/mixins/gesture-event-listeners.html">
+<link rel="import" href="../../../bower_components/paper-styles/color.html">
+<link rel="import" href="../../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../../bower_components/paper-toggle-button/paper-toggle-button.html">
+<link rel="import" href="../../../bower_components/app-route/app-route.html">
+<link rel="import" href="../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="components/youtube-search.html">
-<link rel="import" href="components/yyoutube-lite.html">
-<link rel="import" href="components/yime-input.html">
-<link rel="import" href="../styles/shared-styles-nav.html">
+<link rel="import" href="components/youtube-lite.html">
+<link rel="import" href="components/time-input.html">
+<link rel="import" href="../../styles/shared-styles-nav.html">
 <dom-module id="page-video">
   <template>
     <style include="shared-styles-nav">
       :host {
-        display: none;
         position: relative;
         height: calc(100vh - 60px);
         --primary-color: var(--paper-red-500);
@@ -68,11 +69,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .coverInput {
-        position: absolute;
-        width: 100%;
-        height: 112px;
-        ;
+        border: 1px solid white;
         z-index: 1;
+      }
+
+      #heg {
+        height: 800px;
+        padding: 5px;
+      }
+
+      .type {
+        font-family: sans-serif;
+        font-size: 11px;
+        letter-spacing: 1px;
+        height: 16px;
+        /* border: 1px solid; */
+        border-radius: 4px;
+        padding-top: 5px;
+        padding-left: 3px;
+        padding-right: 3px;
+        background-color: #22303c8a;
+        box-shadow: 0px 2px 1px #1f6cbb30;
+      }
+
+      .value {
+        margin-top: 5px;
+        margin-left: 7px;
+        padding-left: 12px;
+        margin-right: 2px;
+        /* border: 1px solid; */
+        box-shadow: 0px -2px 8px #6378c59c;
+      }
+
+      .value2 {
+        margin-top: 5px;
+        margin-left: 4px;
+        margin-right: 2px;
+        padding-left: 6px;
+        /* border: 1px solid; */
+        box-shadow: 0px -2px 8px #6378c59c;
+      }
+      .nav{
+        position: relative;
       }
     </style>
 
@@ -81,42 +119,52 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     provides this route decides where this element lives in the URL space. In
     this case, the parent, which uses hashes, matches #/video and hence this
     element lives in <App serving point>?querParams#/video/:vid -->
-    <app-route route="{{route}}" pattern="/:vid" data="{{data}}" tail="{{videoTail}}"query-params="{{queryParams}}" active="{{videoPageActive}}">
+    <app-route route="{{route}}" pattern="/:vid" data="{{data}}" tail="{{videoTail}}" query-params="{{queryParams}}" active="{{videoPageActive}}">
+    </app-route>
+    <app-route route="{{videoTail}}" pattern="/video/:page" data="{{videData}}" tail="{{vidTail}}" query-params="{{videoQuery}}">
     </app-route>
 
     <!-- You can bind any element's state into the URL by binding their
     properties into the queryParams object. youtube-lite doesn't have any code
     that's even aware of routing or the URL. -->
-    <youtube-lite id="player" video-id="{{data.vid}}" state="{{queryParams.state}}" current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
-    </youtube-lite>
 
-    <div id="controls">
+    <div id="heg" class="nav">
 
-      <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
-        on-down="pause" on-up="play"></time-input>
-      <div class="coverInput"></div>
-      <ul class="nav">
-        <li class="nav-item">
-          <paper-input id="time" type="string" label="Elapsed" on-click="prevent" value="{{transformedTime}}">
-          </paper-input>
-        </li>
-        <li class="nav-item">
-          <span class="nav-link active"> </span>
-        </li>
-        <li class="nav-item">
-          <paper-input id="time" type="string" label="Duration" value="{{fulTime}}">
-          </paper-input>
-        </li>
-        <li class="nav-item z2">
-          <paper-toggle-button id="state" active="{{playing}}">
-            [[queryParams.state]]
-          </paper-toggle-button>
-        </li>
-      </ul>
-      <youtube-search class="search" search="{{data.vid}}" api="[[Details]]" hide="true" video-data="{{timeData}}">
-      </youtube-search>
+      <youtube-lite id="player" video-id="{{videData.page}}" state="{{queryParams.state}}" current-time="{{queryParams.time}}"
+        start-time="{{queryParams.time}}">
+      </youtube-lite>
+
+      <div id="controls">
+
+        <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
+          on-down="pause" on-up="play"></time-input>
+        <nav class="nav" id="nav">
+          <div class="nav-item">
+            <p>
+              <div class="type">Time Elapsed:</div>
+              <div class="value"> {{transformedTime}} </div>
+              <h4></h4>
+            </p>
+          </div>
+          <div class="nav-item">
+            <span class="nav-link active"> </span>
+          </div>
+          <div class="nav-item">
+            <p>
+              <div class="type">duration</div>
+              <div class="value2"> {{fulTime}}</div>
+            </p>
+          </div>
+          <div class="nav-item z2">
+            <paper-toggle-button id="state" active="{{playing}}">
+              [[queryParams.state]]
+            </paper-toggle-button>
+          </div>
+        </nav>
+        <youtube-search search="{{videData.page}}" api="[[Details]]" class="search" hide="true" video-data="{{timeData}}">
+        </youtube-search>
+      </div>
     </div>
-
   </template>
 
   <script>
@@ -155,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           resize: {
             type: Boolean,
-            notify: true,
+            notify: true
           },
           hours: {
             type: String,
@@ -196,8 +244,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           '_time(queryParams)'
         ]
       }
-
       _toSeconds(obj) {
+        console.log("got time", obj)
         if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
           let time, mTime, sTime, hTime, seconds
           if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
@@ -286,20 +334,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _playingChanged(playing) {
-        console.log(playing)
-    /*    this.set('queryParams.state', playing ? 'playing' : 'paused');
-        this.getTime(this.queryParams)*/
+        this.set('queryParams.state', playing ? 'playing' : 'paused');
+        this.getTime(this.queryParams)
       }
 
       _stateChanged(state) {
-        console.log(state)
-     /*   this.playing = state === 'playing';
-        this.getTime(this.queryParams)*/
+        this.playing = state === 'playing';
+        this.getTime(this.queryParams)
       }
       _videoPageActiveChanged(videoPageActive, previousValue) {
-        console.log(videoPageActive, previousValue)
+
         // change color of page on page change
-     /*   var newColor;
+        var newColor;
         this.routePage = "videos"
         if (videoPageActive) {
           // black
@@ -311,14 +357,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.style.display = ""
         }
 
-        document.body.style.backgroundColor = 'rgb(' + newColor + ',' + newColor +
+        this.$.heg.style.backgroundColor = 'rgb(' + newColor + ',' + newColor +
           ',' + newColor + ')';
         this.style.zIndex = 1
         // on first load, set the color then allow color transition animations
         if (previousValue === undefined) {
           document.body.style.transition = 'background-color .2s linear';
+          setTimeout(function () {
+            this.$.player.$.player.play()
+          }, 5000)
           return;
-        }*/
+        }
       }
     }
     window.customElements.define(pageVideo.is, pageVideo);

@@ -1,5 +1,5 @@
 <link rel="import" href="routes/page-home.html">
-<link rel="import" href="youtube/components/validate-input.html">
+<link rel="import" href="routes/youtube/components/validate-input.html">
 <link rel="import" href="imports.html">
 <dom-module id="app-shell">
   <template>
@@ -17,7 +17,7 @@
       app-toolbar {
         color: #fff;
         background-color: var(--app-primary-color);
-       /* padding: 2px 6px;*/
+        /* padding: 2px 6px;*/
       }
 
       app-toolbar ul {
@@ -73,20 +73,41 @@
       }
 
       paper-icon-button.right {
+        color:antiquewhite;
         position: absolute;
         right: 10px;
-        ;
+        z-index: 3;
       }
 
       paper-icon-button.left {
         left: 10px;
+        z-index: 3;
+      }
+
+      app-header {
+        width: 100%;
+        height: 183px;
+        color: #fff;
+        background-color: #3f51b54d;
+        --app-header-background-front-layer: {
+          background-image: url("../images/youtubes.png");
+          background-position: left center;
+        }
+      }
+
+      app-toolbar {
+        color: var(--app-third-color);
+        font-size: 2em;
+        text-shadow: 1px 1px 0px yellow;
+      }
+
+      app-toolbar.tall {
+        height: 148px;
       }
     </style>
 
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}" queryParams="{{queryParams}}"></app-route>
-
-    <!-- Drawer content -->
     <!-- Drawer content -->
     <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
       <app-toolbar>Menu</app-toolbar>
@@ -99,16 +120,23 @@
         <a name="youtube" href="/youtube/search" on-click="_drToggle">youtube</a>
       </iron-selector>
     </app-drawer>
-    <app-header-layout>
-      <app-header slot="header" effects="waterfall" condenses reveals>
-
-        <app-toolbar id="toolbar">
-          <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
-          <paper-input id="val" class="right" label="Search all" value="{{someData}}"></paper-input>
-          <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
-        </app-toolbar>
-
-      </app-header>
+    <app-header-layout>      
+        <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
+          <!--home header -->
+          <div name="home">
+            <app-toolbar id="toolbar">
+              <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
+              <paper-input id="val" class="right" label="Search all" value="{{someData}}"></paper-input>
+              <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
+            </app-toolbar>
+          </div>
+          <!--toutube header -->
+          <div name="[[change]]">
+              <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
+              <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
+          </div>
+        </iron-pages>
+    <!-- -->
       <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
         <page-home name="home"></page-home>
         <page-login name="login"></page-login>
@@ -152,6 +180,10 @@
             value: "",
             notify: true
           },
+          change:{
+            type: String,
+            computed: '_setHeader(routeData.page)'
+          },
           jsonData: {
             type: Object,
             notify: true,
@@ -185,6 +217,7 @@
       static get observers() {
         return [
           '_routePageChanged(routeData.page)',
+          '_checkDrawerState(this.$.drawer)'
         ];
       }
 
@@ -197,29 +230,25 @@
       ready() {
         super.ready()
         this._resize()
-        window.onresize = (function (event) {
+        window.onresize = event => {
           this._resize()
-        }).bind(this)
-        window.onbeforeunload = function (e) {
-          return "Do you really want to leave our brilliant application?"
-          //if we return nothing here (just calling return;) then there will be no pop-up question at all
-          //return;
-        };
-
+        }
       }
       _resize(likeHome) {
         let elem = this.$.val, val, val2
         val = (parseFloat(window.innerWidth) / 2.5) + "px"
-        this.$.pageButton.hidden = true
-        if (this.routeData.page === "video") {
+        this.$.pageButton.hidden = true        
+        let page = this.subroute.path
+        console.log("page", page)
+        if (this.subroute.path.match(/video/)) {
           this.set('resise', true)
           this.set('resise', false)
         }
         if (window.innerWidth <= 640) {
           val = (window.innerWidth - 150) + "px"
         }
-        if (this.routeData.page !== "searsee.github.io" && this.routeData.page !== "") {
-          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 45)) + "px"
+        if (this.routeData.page !== "home" && this.routeData.page !== "") {
+          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 48)) + "px"
           if (window.innerWidth <= 640) {
             this.$.pageButton.hidden = false
             val2 = this.$.toolbar.style.width = (window.innerWidth - 5) + "px"
@@ -227,18 +256,18 @@
 
           this.$.toolbar.style.width = val2
           this.$.toolbar.style.float = "right"
-          // console.log(this.routeData.page, this.$.toolbar.style.width, (window.innerWidth - (this.$.drawer.getWidth() + 30)))
-
         }
-        if (likeHome || this.routeData.page === "home") {
-          this.$.toolbar.style.width = (window.innerWidth - 10) + "px"
-          // console.log(this.routeData.page, this.$.toolbar.style.width, window.innerWidth, this.$.drawer.getWidth())
+        if (likeHome === "likeHome" || this.routeData.page === "home") {
+          this.$.toolbar.style.width = (window.innerWidth - 30) + "px"
         }
         elem.style.width = val
       }
-
+      _setHeader(data){
+        return data
+      }
       _drToggle() {
         this.$.drawer.toggle()
+        this._resize("drawerOpen")
       }
       _innerDrToggle() {
         if ("drawer" in this.$[this.page].$) {
@@ -254,10 +283,7 @@
           this._resize("likeHome")
           return
         }
-        console.log("return")
-
         loadPage = this.subroute.prefix.split("/")[1] || "home"
-    
         this.page = loadPage //|| Polymer.path.
         this._resize()
       }

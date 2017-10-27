@@ -19,6 +19,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
 <link rel="import" href="../../../bower_components/app-layout/app-header/app-header.html">
 <link rel="import" href="../../../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../../../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
 <link rel="import" href="components/youtube-search.html">
 <link rel="import" href="components/youtube-toolbar.html">
 
@@ -40,7 +41,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .card-content {
-        height: 50px;
         background-color: #a5989852;
         width: 100%;
         text-overflow: ellipsis;
@@ -105,19 +105,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       app-header {
-        position: fixed;
-        top: 0;
-        left: 0;
         width: 100%;
-        height: 212px;
+        height: 183px;
         color: #fff;
-        background-color: #3f51b5;
-        /* https://bugs.chromium.org/p/chromium/issues/detail?id=637072 */
+        background-color: #3f51b54d;
         --app-header-background-front-layer: {
-          background-image: url(https://app-layout-assets.appspot.com/assets/bg1.jpg);
+          background-image: url("../../../images/youtubes.png");
           background-position: left center;
         }
-        ;
       }
 
       paper-icon-button {
@@ -130,7 +125,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       app-toolbar {
         color: var(--app-third-color);
-        background-color: var(--app-primary-color);
         font-size: 2em;
         text-shadow: 1px 1px 0px yellow;
       }
@@ -143,44 +137,56 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
       }
 
+      app-header {
+        /*   position: relative;*/
+        top: 0;
+        left: 0;
+        /* width: 100%; */
+      }
+
+      #val {
+        background-color: #8080805c;
+        border-radius: 6px;
+        padding: 6px;
+      }
+
       /* mobile layout */
 
-      @media (max-width: 600px) {
+      @media (max-width: 640px) {
 
         .content {
           margin: 2px 0 0 0;
           box-shadow: none;
         }
-
+        app-header {
+          /*  position: relative;*/
+          top: -38px;
+          left: 0;
+        }
         paper-fab {
           top: 290px;
           right: 16px;
         }
 
       }
-
-      app-header {
-        position: relative;
-        top: 0;
-        left: 0;
-        /* width: 100%; */
-      } 
-    </style>    
+    </style>
     <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
     </app-route>
     <app-route route="{{route}}" pattern="youtube/search/:local" data="{{searchData}}" tail="{{searchTail}}" query-params="{{searchQuery}}">
     </app-route>
-    <app-header condenses reveals effects="waterfall resize-title blend-background parallax-background">
-      <app-toolbar>
-        <paper-icon-button icon="menu"></paper-icon-button>
-        <h4 condensed-title>Youtube Search &mdash; Environment</h4>
-        <paper-icon-button icon="search"></paper-icon-button>
-      </app-toolbar>
-      <app-toolbar class="tall">
-        <h1 main-title>Youtube Search</h1>
-      </app-toolbar>
-    </app-header>
 
+      <app-header condenses reveals effects="waterfall resize-title blend-background parallax-background">
+        <app-toolbar>
+          <h4 condensed-title>Youtube Search</h4>
+        </app-toolbar>
+        <app-toolbar title class="tall">
+          <a href="/youtube/search/list?api=search&q=">
+            <paper-input id="val" label="" value="{{query.q}}"></paper-input>
+          </a>
+          <paper-icon-button icon="search"></paper-icon-button>
+        </app-toolbar>
+      </app-header>
+   
     <div class="content">
       <iron-selector selected="[[routeTail.prefix]]" attr-for-selected="name" class="drawer-list" role="navigation">
         <template is="dom-repeat" items="{{items}}" as="video">
@@ -192,8 +198,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span class="contentView"> {{video.shortTitle}} </span>
             <a name="/youtube/search/" href="/youtube/search/channel?api=search&q={{video.channelId}}">
               <div class="channelView">
-                <b>Chanel:</b>
-                <button class="channelViewTitle">{{video.channelTitle}} </button>
+                <paper-button>
+                  <iron-icon icon="link"></iron-icon>{{video.channelTitle}}</paper-button>
               </div>
             </a>
           </div>
@@ -219,7 +225,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             //observer: '_pageChanged',
             notify: true
-          }, 
+          },
           local: {
             type: String,
             reflectToAttribute: true,
@@ -287,7 +293,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       _routePageChanged() {
         this.local = this.searchData.local
-      }      
+      }
       _seethisshit() {
         window.scrollTo(0)
         this.items.map(data => {

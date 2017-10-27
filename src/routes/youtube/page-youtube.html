@@ -35,6 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         app-drawer-layout:not([narrow]) [drawer-toggle] {
           display: none;
         }
+
         iron-pages {
           transition: transform 0.3s;
         }
@@ -55,6 +56,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           top: 4em;
           /* position: relative; */
         }
+
         app-toolbar {
           color: var(--app-third-color);
           background-color: var(--app-primary-color);
@@ -92,7 +94,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         app-drawer {
           z-index: 1;
-          padding-right: 2px
+          --app-drawer-content-container: {
+            background-color: #adc2d28c;
+          }
         }
 
         .drawer-list {
@@ -129,13 +133,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           font-style: normal;
         }
 
-        @media (max-width: 639px) {
+        @media (max-width: 640px) {
           [main-title] {
             margin-left: 50px;
             font-size: 30px;
           }
           [condensed-title] {
             font-size: 15px;
+          }
+          app-drawer {
+            --app-drawer-content-container: {
+              position: absolute;
+              top: -64px;
+            }
           }
         }
 
@@ -153,7 +163,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
     </app-route>
     <!--*app-route /youtube/ - app link -->
-    <app-route route="{{route}}" pattern="/youtube/:app" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}">
+    <app-route route="{{route}}" pattern="/youtube/:app" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}"
+      active="{{pageActive}}">
     </app-route>
     <!--app-route /videos/-->
     <app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}">
@@ -165,9 +176,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </google-signin-->
         <youtube-toolbar collapsed$="{{videoPageActive}}">
           <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
-          <a href="/youtube/search/list?api=search&q=">
-            <paper-input id="val" label="search..." value="{{query.q}}"></paper-input>
-          </a>
         </youtube-toolbar>
 
         <validate-input label="Search pages" value="{{routeTail.path}}">
@@ -180,7 +188,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-        <page-video name="video" id="video" route="{{routeTail}}">
+        <page-video name="video" id="video" route="{{route}}" resize="[[resize]]" active="{{pageActive}}">
         </page-video>
         <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}">
         </page-search>
@@ -231,7 +239,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           routeTail: {
             type: Object,
             notify: true
-          },          
+          },
+          pageActive: {
+            type: Boolean,
+            reflectToAttribute: true,
+            notify: true
+          },
           rootPath: {
             type: String,
             value: "/"
@@ -304,7 +317,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           resize: {
             type: Boolean,
-            // observer: '_messenger'
+            notify: true,
+            observer: '_messenger'
           },
           dataq: {
             type: String,
@@ -370,7 +384,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
       _messenger(data) {
-        //  console.log("got", data)
+        console.log("got", data)
         this.$.video.resize = data
       }
 
