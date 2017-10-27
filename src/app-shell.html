@@ -73,7 +73,7 @@
       }
 
       paper-icon-button.right {
-        color:antiquewhite;
+        color: antiquewhite;
         position: absolute;
         right: 10px;
         z-index: 3;
@@ -120,23 +120,23 @@
         <a name="youtube" href="/youtube/search" on-click="_drToggle">youtube</a>
       </iron-selector>
     </app-drawer>
-    <app-header-layout>      
-        <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
-          <!--home header -->
-          <div name="home">
-            <app-toolbar id="toolbar">
-              <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
-              <paper-input id="val" class="right" label="Search all" value="{{someData}}"></paper-input>
-              <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
-            </app-toolbar>
-          </div>
-          <!--toutube header -->
-          <div name="[[change]]">
-              <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
-              <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
-          </div>
-        </iron-pages>
-    <!-- -->
+    <app-header-layout>
+      <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
+        <!--home header -->
+        <div name="home">
+          <app-toolbar id="toolbar">
+            <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
+            <paper-input id="val" class="right" label="Search all" value="{{someData}}"></paper-input>
+            <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
+          </app-toolbar>
+        </div>
+        <!--toutube header -->
+        <div name="[[change]]">
+          <paper-icon-button id="pageButton" hidden class="left" icon="menu" on-click="_innerDrToggle"></paper-icon-button>
+          <paper-icon-button class="right" icon="menu" on-click="_drToggle"></paper-icon-button>
+        </div>
+      </iron-pages>
+      <!-- -->
       <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
         <page-home name="home"></page-home>
         <page-login name="login"></page-login>
@@ -180,7 +180,7 @@
             value: "",
             notify: true
           },
-          change:{
+          change: {
             type: String,
             computed: '_setHeader(routeData.page)'
           },
@@ -237,14 +237,17 @@
       _resize(likeHome) {
         let elem = this.$.val, val, val2
         val = (parseFloat(window.innerWidth) / 2.5) + "px"
-        this.$.pageButton.hidden = true        
+        this.$.pageButton.hidden = true
         let page = this.subroute.path
         if (this.subroute.path.match(/video/)) {
           this.set('resise', true)
           this.set('resise', false)
-        }       
+        }
+        if (window.innerWidth <= 640) {
+          this.$.pageButton.hidden = false
+        }
       }
-      _setHeader(data){
+      _setHeader(data) {
         return data
       }
       _drToggle() {
