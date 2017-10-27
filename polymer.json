@@ -4,7 +4,7 @@
   "fragments": [
     "src/routes/page-home.html",
     "src/routes/page-login.html",
-    "src/routes/page-youtube.html",
+    "src/routes/youtube/page-youtube.html",
     "src/routes/page-view404.html"
   ],
   "sources": [

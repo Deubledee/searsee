@@ -21,7 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../../bower_components/paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../../../bower_components/paper-input/paper-input.html">
 <link rel="import" href="../../styles/shared-styles.html">
-<dom-module id="my-youtube">
+<dom-module id="page-youtube">
   <template id="page-template">
     <custom-style>
       <style>
@@ -144,7 +144,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           app-drawer {
             --app-drawer-content-container: {
               position: absolute;
-              top: -64px;
+              top: -2px;
+              z-index: 2;
             }
           }
         }
@@ -160,7 +161,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </custom-style>
 
     <app-location route="{{route}}"></app-location>
-    <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
+    <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}" active="{{pageActive}}">
     </app-route>
     <!--*app-route /youtube/ - app link -->
     <app-route route="{{route}}" pattern="/youtube/:app" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}"
@@ -170,7 +171,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}">
     </app-route>
     <app-drawer-layout>
-      <app-drawer id="drawer" slot="drawer">
+      <app-drawer id="drawer" opened="{{drtgl}}" slot="drawer">
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
@@ -181,9 +182,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <validate-input label="Search pages" value="{{routeTail.path}}">
         </validate-input>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="home" href="/youtube/search/" on-click="_drToggle">search</a>
-          <a name="login" href="/youtube/channel/" on-click="_drToggle">channel</a>
-          <a name="youtube" href="/youtube/profile/" on-click="_drToggle">profile</a>
+          <a name="search" href="/youtube/search/" on-click="_drToggle">search</a>
+          <a name="channel" href="/youtube/channel/" on-click="_drToggle">channel</a>
+          <a name="profile" href="/youtube/profile/" on-click="_drToggle">profile</a>
         </iron-selector>
       </app-drawer>
 
@@ -213,7 +214,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <script>
     class pageYoutube extends Polymer.Element {
       static get is() {
-        return 'my-youtube';
+        return 'page-youtube';
       }
 
       constructor() {
@@ -301,6 +302,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Object,
             notify: true
           },
+          pageActive: {
+            type: Boolean
+          },
+          opened: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true,
+            observer: '_drToggle'
+          },
+          drtgl: {
+            type: Boolean,
+            notify: true
+          },
+          resize: {
+            type: Boolean,
+            notify: true,
+            observer: '_messenger'
+          },          
           newCategory: {
             type: String
           },
@@ -315,11 +335,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             },
             notify: true
           },
-          resize: {
-            type: Boolean,
-            notify: true,
-            observer: '_messenger'
-          },
+          
           dataq: {
             type: String,
             value: "zen",
@@ -347,8 +363,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            '_routePageChanged(data.page)',
          ];*/
       }
-      _drToggle() {
-        this.$.drawer.toggle()        
+      _drToggle(data) {
+        console.log(this.pageActive)
+        if (this.pageActive === true)
+          this.drtgl = data
       }
       _videoDataChanged(data) {
         var allVideos = [];

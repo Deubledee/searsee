@@ -110,7 +110,7 @@
     <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}" queryParams="{{queryParams}}"></app-route>
     <!-- Drawer content -->
-    <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+    <app-drawer id="drawer" slot="drawer" opened="{{drtgl}}" swipe-open="[[narrow]]">
       <app-toolbar>Menu</app-toolbar>
 
       <validate-input label="Search pages" value="{{routeData.page}}" jason-data="[[jasonData]]"></validate-input>
@@ -141,7 +141,7 @@
       <iron-pages selected="{{page}}" attr-for-selected="name" fallback-selection="view404" role="main">
         <page-home name="home"></page-home>
         <page-login name="login"></page-login>
-        <my-youtube id="youtube" name="youtube" dataq="{{someData}}" resize="[[resise]]"></my-youtube>
+        <page-youtube id="youtube" name="youtube" opened="{{drtgl2}}" dataq="{{someData}}" resize="[[resise]]"></page-youtube>
         <page-view404 name="view404"></page-view404>
       </iron-pages>
     </app-header-layout>
@@ -160,6 +160,14 @@
             notify: true
           },
           resise: {
+            type: Boolean,
+            notify: true
+          },
+          drtgl: {
+            type: Boolean,
+            notify: true
+          },
+          drtgl2: {
             type: Boolean,
             notify: true
           },
@@ -192,7 +200,7 @@
               return {
                 searches: [
                   "youtube",
-                  "searchYouTube",
+                  "search",
                   "video",
                   "home",
                   "login"
@@ -240,7 +248,7 @@
         val = (parseFloat(window.innerWidth) / 2.5) + "px"
         this.$.pageButton.hidden = true
         let page = this.subroute.path
-        if (this.subroute.path.match(/video/)) {
+        if (page.match(/video/)) {
           this.set('resise', true)
           this.set('resise', false)
         }
@@ -252,14 +260,12 @@
         return data
       }
       _drToggle() {
-        this.$.drawer.toggle()        
+        this.drtgl = !this.drtgl
       }
       _innerDrToggle() {
-        if ("drawer" in this.$[this.page].$) {
-          if (window.innerWidth <= 640)
-            this.$[this.page].$.drawer.style.top = "-56px"
-          this.$[this.page].$.drawer.toggle()
-        }
+        console.log(this.drtgl2)
+        if (window.innerWidth <= 640)
+          this.drtgl2 = !this.drtgl2
       }
       _routePageChanged(page) {
         let loadPage
