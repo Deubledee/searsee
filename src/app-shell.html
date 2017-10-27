@@ -73,13 +73,14 @@
       }
 
       paper-icon-button.right {
-        color: antiquewhite;
+        color: #bd8130;
         position: absolute;
         right: 10px;
         z-index: 3;
       }
 
       paper-icon-button.left {
+        color: #bd8130;
         left: 10px;
         z-index: 3;
       }
@@ -251,8 +252,7 @@
         return data
       }
       _drToggle() {
-        this.$.drawer.toggle()
-        this._resize("drawerOpen")
+        this.$.drawer.toggle()        
       }
       _innerDrToggle() {
         if ("drawer" in this.$[this.page].$) {

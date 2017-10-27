@@ -347,6 +347,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            '_routePageChanged(data.page)',
          ];*/
       }
+      _drToggle() {
+        this.$.drawer.toggle()        
+      }
       _videoDataChanged(data) {
         var allVideos = [];
         var that = this;
