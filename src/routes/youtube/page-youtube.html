@@ -384,7 +384,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
       _messenger(data) {
-        console.log("got", data)
         this.$.video.resize = data
       }
 
@@ -396,7 +395,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         var resolvedPageUrl = this.resolveUrl('page-' + page + '.html');
-        console.log("page changed", resolvedPageUrl)
         Polymer.importHref(
           resolvedPageUrl,
           null,

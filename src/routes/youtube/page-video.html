@@ -109,7 +109,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         /* border: 1px solid; */
         box-shadow: 0px -2px 8px #6378c59c;
       }
-      .nav{
+
+      .nav {
         position: relative;
       }
     </style>
@@ -244,8 +245,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           '_time(queryParams)'
         ]
       }
-      _toSeconds(obj) {
-        console.log("got time", obj)
+      _toSeconds(obj) {                
         if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
           let time, mTime, sTime, hTime, seconds
           if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
@@ -273,13 +273,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             seconds = (parseInt(mTime) * 60) + parseInt(sTime)
           }
           this.set("time", seconds.toString())
-          this.set("fulTime", time.toString())
+          this.set("fulTime", time.toString())          
         }
       }
 
-      _time(data) {
+      _time(data) {        
         if (data.hasOwnProperty("state") === false) {
           this.transformedTime = `00:00:00`
+          this.$.fds.query = "0"
+          console.log("doing my job..!!??", data.hasOwnProperty("state"), this.transformedTime )
         }
         if (data.state === 'playing') {
           this.set("seconds", (data.time % 60) < 10 ? `0${(data.time % 60)}` : `${(data.time % 60)}`)
@@ -320,7 +322,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.set('queryParams.state', 'paused');
       }
 
-      setTime(time) {
+      setTime(time) {        
         getTime({
           time: time
         })
@@ -329,12 +331,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       play() {
         setTimeout(() => {
           this.set('queryParams.state', 'playing');
+          
         }, 200)
 
       }
 
       _playingChanged(playing) {
         this.set('queryParams.state', playing ? 'playing' : 'paused');
+        if (this.queryParams.state === "playing" ) this.$.player.$.player.play()  
         this.getTime(this.queryParams)
       }
 
@@ -343,7 +347,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.getTime(this.queryParams)
       }
       _videoPageActiveChanged(videoPageActive, previousValue) {
-
+        this._time({})
         // change color of page on page change
         var newColor;
         this.routePage = "videos"
@@ -356,16 +360,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           newColor = 255;
           this.style.display = ""
         }
-
+        this._time({})
         this.$.heg.style.backgroundColor = 'rgb(' + newColor + ',' + newColor +
           ',' + newColor + ')';
         this.style.zIndex = 1
         // on first load, set the color then allow color transition animations
         if (previousValue === undefined) {
           document.body.style.transition = 'background-color .2s linear';
-          setTimeout(function () {
-            this.$.player.$.player.play()
-          }, 5000)
+          this._time({})
+          setTimeout(()=>{
+            this.set("queryParams.state", "playing")  
+          }, 200)                  
           return;
         }
       }

@@ -239,28 +239,10 @@
         val = (parseFloat(window.innerWidth) / 2.5) + "px"
         this.$.pageButton.hidden = true        
         let page = this.subroute.path
-        console.log("page", page)
         if (this.subroute.path.match(/video/)) {
           this.set('resise', true)
           this.set('resise', false)
-        }
-        if (window.innerWidth <= 640) {
-          val = (window.innerWidth - 150) + "px"
-        }
-        if (this.routeData.page !== "home" && this.routeData.page !== "") {
-          val2 = (window.innerWidth - (this.$.drawer.getWidth() + 48)) + "px"
-          if (window.innerWidth <= 640) {
-            this.$.pageButton.hidden = false
-            val2 = this.$.toolbar.style.width = (window.innerWidth - 5) + "px"
-          }
-
-          this.$.toolbar.style.width = val2
-          this.$.toolbar.style.float = "right"
-        }
-        if (likeHome === "likeHome" || this.routeData.page === "home") {
-          this.$.toolbar.style.width = (window.innerWidth - 30) + "px"
-        }
-        elem.style.width = val
+        }       
       }
       _setHeader(data){
         return data
