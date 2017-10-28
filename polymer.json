@@ -4,8 +4,10 @@
   "fragments": [
     "src/routes/page-home.html",
     "src/routes/page-login.html",
+    "src/routes/page-view404.html",
     "src/routes/youtube/page-youtube.html",
-    "src/routes/page-view404.html"
+    "src/routes/youtube/page-search.html",
+    "src/routes/youtube/page-video.html"
   ],
   "sources": [
     "src/**/*",
@@ -15,7 +17,7 @@
   "extraDependencies": [
     "manifest.json",
     "favicon.ico",
-    "bower_components/webcomponentsjs/*.js"
+    "bower_components/*"
   ],
   "builds": [
     {
@@ -27,7 +29,6 @@
       },
       "addServiceWorker": true,
       "insertPrefetchLinks": true,
-      "swPrecacheConfig": "sw-precache-config.js",
       "addPushManifest": true,
       "js": {
         "compile": false,
