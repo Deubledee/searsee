@@ -1,0 +1,14 @@
+{
+  "src/app-shell.html": {
+    "src/routes/page-home.html": {
+      "type": "document",
+      "weight": 1
+    }
+  },
+  "src/routes/page-home.html": {},
+  "src/routes/page-login.html": {},
+  "src/routes/page-view404.html": {},
+  "src/routes/youtube/page-youtube.html": {},
+  "src/routes/youtube/page-search.html": {},
+  "src/routes/youtube/page-video.html": {}
+}
