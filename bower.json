@@ -40,7 +40,12 @@
     "iron-validator-behavior": "PolymerElements/iron-validator-behavior#^2.0.0",
     "promise-polyfill": "^6.0.2",
     "google-signin": "^2.0.0",
+<<<<<<< HEAD
+    "platinum-sw": "PolymerElements/platinum-sw#^2.0.0",
+    "mobile-detect": "hgoebl/mobile-detect.js#^1.3.7"
+=======
     "platinum-sw": "PolymerElements/platinum-sw#^2.0.0"
+>>>>>>> aa8f5d0ddd777141c7795d03ddfb8b7151bee35b
   },
   "devDependencies": {
     "web-component-tester": "6.0.0"
