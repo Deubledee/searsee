@@ -75,17 +75,26 @@ var cleanResponse = function (originalResponse) {
     });
   };
 
+<<<<<<< HEAD
+var createCacheKey = function (originalUrl, paramName, paramValue, dontCacheBustUrlsMatching) {
+=======
 var createCacheKey = function (originalUrl, paramName, paramValue,
                            dontCacheBustUrlsMatching) {
+>>>>>>> aa8f5d0ddd777141c7795d03ddfb8b7151bee35b
     // Create a new URL object to avoid modifying originalUrl.
     var url = new URL(originalUrl);
 
     // If dontCacheBustUrlsMatching is not set, or if we don't have a match,
     // then add in the extra cache-busting URL parameter.
+<<<<<<< HEAD
+    if (!dontCacheBustUrlsMatching || !(url.pathname.match(dontCacheBustUrlsMatching))) {
+      url.search += (url.search ? '&' : '') + encodeURIComponent(paramName) + '=' + encodeURIComponent(paramValue);
+=======
     if (!dontCacheBustUrlsMatching ||
         !(url.pathname.match(dontCacheBustUrlsMatching))) {
       url.search += (url.search ? '&' : '') +
         encodeURIComponent(paramName) + '=' + encodeURIComponent(paramValue);
+>>>>>>> aa8f5d0ddd777141c7795d03ddfb8b7151bee35b
     }
 
     return url.toString();
@@ -232,8 +241,12 @@ self.addEventListener('fetch', function(event) {
     var navigateFallback = 'index.html';
     if (!shouldRespond &&
         navigateFallback &&
+<<<<<<< HEAD
+        (event.request.mode === 'navigate') && isPathWhitelisted(["^(?!\\/__).*","^\\/(index.html)?$"], event.request.url)) {
+=======
         (event.request.mode === 'navigate') &&
         isPathWhitelisted(["^(?!\\/__).*","^\\/(index.html)?$"], event.request.url)) {
+>>>>>>> aa8f5d0ddd777141c7795d03ddfb8b7151bee35b
       url = new URL(navigateFallback, self.location).toString();
       shouldRespond = urlsToCacheKeys.has(url);
     }

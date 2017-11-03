@@ -1,0 +1,265 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="youtube-search.html">
+<dom-module id="search-results">
+    <template>
+        <style>
+            :host {
+                width: 100%;
+                --app-primary-color: rgb(207, 29, 23);
+                --app-secondary-color: black;
+                --app-third-color: rgb(66, 133, 244);
+
+            }
+
+            a {
+                color: black;
+                text-decoration: none;
+            }
+
+            .content {
+                position: relative;
+                top: -26px;
+                padding: 30px 5px 59px;
+                background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+                color: #333;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
+                margin-top: 62px;
+                margin-left: -4px;
+            }
+
+            .content[bottom] {
+                background: linear-gradient(to top right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+            }
+
+            .content[mini] {
+                background: linear-gradient(to top left, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+                top: 0px;
+                width: 100%;
+                height: 61px;
+                padding: 30px 5px 59px;
+                color: #333;
+                box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
+                overflow-x: hidden;
+                margin-top: -12px;
+            }
+
+            #content::-webkit-scrollbar {
+                width: 16px;
+                border-radius: 10px;
+                z-index: 2;
+            }
+
+            #content::-webkit-scrollbar-thumb {
+                width: 16px;
+                margin-top: -12px;
+                background: linear-gradient(to right, #beb7be 0%, #96928e 5%, #615b61 50%,
+                #3d3d3b 95%, #0f0e0f 100%);
+                border-radius: 50%;
+                margin-right: 2px;
+            }
+
+            #content::-webkit-scrollbar-thumb:hover {
+                width: 16px;
+                background: linear-gradient(to right, #464446 0%, #070401 5%,
+                #bdb0bd 50%, #040500 95%, #c7b8c7 100%);
+                border-radius: 50%;
+            }
+
+            #content::-webkit-scrollbar-track {
+                width: 16px;
+                background-color: rgba(44, 49, 44, 0);
+                margin-right: 2px;
+            }
+
+            .nav {
+                width: 98%;
+                box-shadow: 3px -2px 2px #a7b6b2;
+            }
+
+            .nav[mini] {
+                float: left;
+                width: 49%;
+                margin-bottom: 13px;
+                margin-left: 10px;
+            }
+
+            .nav[bottom] {
+                float: left;
+                width: 51%;
+                margin-bottom: 13px;
+                margin-left: 8px;
+            }
+
+            .card-content {
+                width: 98%;
+                text-overflow: ellipsis;
+                margin-bottom: 10px;
+                box-shadow: 3px 4px 5px #4683a7;
+            }
+
+            .card-content[mini] {
+                width: 43%;
+                float: left;
+                margin-top: 5px;
+                box-shadow: 3px -4px 5px #4683a7;
+            }
+
+            .card-content[bottom] {
+                width: 91%;
+                margin-left: 7px;
+                margin-bottom: 23px;
+                float: left;
+                margin-top: 5px;
+                box-shadow: 3px 4px 5px #4683a7;
+            }
+
+            .contentView {
+                z-index: 1;
+                font-style: italic;
+                flex-grow: 7;
+                font-size: 14px;
+                /* background-color: #71a17b; */
+                color: #b77b7b;
+                margin-left: 12px;
+                font-weight: bolder;
+            }
+
+            .contentView[mini] {
+                position: relative;
+                top: 26px;
+            }
+
+            .contentView[bottom] {
+                font-size: 18px;
+            }
+
+            .channelView {
+                z-index: 1;
+                font-style: italic;
+                flex-grow: 7;
+                font-size: 14px;
+                color: #fbdede;
+                margin-right: 3px;
+                font-weight: bolder;
+                margin-bottom: 24px;
+            }
+
+            .channelView[mini] {
+                position: relative;
+                top: 26px;
+                overflow-x: hidden;
+                z-index: 1;
+                font-style: italic;
+                flex-grow: 7;
+                font-size: 14px;
+                color: #fbdede;
+                font-weight: bolder;
+            }
+
+            .channelView a {
+                color: #f1e8e8;
+            }
+
+            .float[mini] {
+                margin-top: -25px;
+                /* width: 379px; */
+                padding: 22px;
+                /* margin-left: 101px; */
+            }
+
+            @media (max-width: 640px) {
+                .content {
+                    margin: 36px -1px 0px -3px;
+                    box-shadow: none;
+                }
+                .content[mini] {
+                    width: 99%;
+                }
+                #content::-webkit-scrollbar {
+                    display: none
+                }
+                paper-fab {
+                    top: 290px;
+                    right: 16px;
+                }
+
+            }
+        </style>
+        <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
+        </app-route>
+        <div id="content" class="content" mini$="[[mini]]" bottom$="[[bottom]]">
+            <iron-selector selected="[[routeTail.prefix]]" attr-for-selected="name" class="drawer-list" role="navigation">
+                <template is="dom-repeat" items="{{items}}" as="video">
+                    <div class="float" mini$="[[mini]]">
+                        <a name="/youtube/search/" id="anav" href="/youtube/video/{{video.id}}" on-click="_seethisshit">
+                            <paper-card mini$="[[mini]]" bottom$="[[bottom]]" class="nav" image="{{video.thumbnail}}">
+                            </paper-card>
+                        </a>
+                        <div class="card-content" mini$="[[mini]]" bottom$="[[bottom]]" title="{{video.title}}">
+                            <div class="contentView" mini$="[[mini]]" bottom$="[[bottom]]"> {{video.shortTitle}} </div>
+                            <div class="channelView" mini$="[[mini]]">
+                                <a name="/youtube/search/" href="/youtube/search/channel?api=search&q={{video.channelId}}">
+                                    <paper-button on-click="_seethisshit">
+                                        <iron-icon icon="link"></iron-icon>{{video.channelTitle}}</paper-button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </iron-selector>
+        </div>
+    </template>
+    <script>
+        class searchResults extends Polymer.Element {
+            static get is() {
+                return 'search-results';
+            }
+            constructor() {
+                super();
+            }
+            ready() {
+                super.ready()
+            }
+            static get properties() {
+                return {
+                    route: {
+                        type: Object,
+                        notify: true
+                    },
+                    items: {
+                        type: Array,
+                        obsever: '_seethisshit'
+                    },
+                    mini: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                    bottom: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                }
+            }
+            _seethisshit() {
+                window.scrollTo({}, 0)
+            }
+        }
+        window.customElements.define(searchResults.is, searchResults);
+    </script>
+</dom-module>

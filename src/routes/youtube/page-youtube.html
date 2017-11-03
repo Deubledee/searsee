@@ -1,1 +1,552 @@
-<html><head></head><body><dom-module id="app-shell"><dom-module id="page-youtube"><template id="page-template"><custom-style><style>:host{--app-primary-color:rgb(207, 29, 23);--app-secondary-color:black;--app-third-color:rgb(66, 133, 244);display:block;}app-drawer-layout:not([narrow]) [drawer-toggle]{display:none;}iron-pages{transition:transform 0.3s;}page-search{display:block;padding:4px 1px 1px 3px;}app-drawer{--app-drawer-content-container:{background-color:rgb(253, 250, 250);};}app-drawer.lower{top:4em;}app-toolbar{color:var(--app-third-color);background-color:var(--app-primary-color);font-size:2em;text-shadow:1px 1px 0px yellow;}app-toolbar ul{width:100%;margin-bottom:20px;padding:10px 15px;}app-toolbar li{width:49%;float:left;position:relative;display:block;margin-bottom:-1px;}app-header paper-icon-button{--paper-icon-button-ink-color:white;}paper-input{background-color:#6e9feb7d;margin-left:2px;}paper-input#val{background-color:#0000;margin-left:2px;}app-drawer{z-index:1;--app-drawer-content-container:{background-color:#adc2d28c;};}.drawer-list{margin:0 20px;}.drawer-list a{display:block;padding:0 16px;text-decoration:none;color:var(--app-secondary-color);line-height:40px;}.drawer-list a.iron-selected{color:black;font-weight:bold;}[main-title]{font-weight:lighter;margin-left:108px;}[condensed-title]{font-weight:lighter;margin-left:30px;overflow:hidden;text-overflow:ellipsis;}[condensed-title] i{font-weight:100;font-style:normal;}@media (max-width: 640px){[main-title]{margin-left:50px;font-size:30px;}[condensed-title]{font-size:15px;}app-drawer{--app-drawer-content-container:{position:absolute;top:-2px;z-index:2;};}}:host([video-page-active]){overflow:hidden;}:host([video-page-active]) iron-pages{transform:translateY(-170px);}</style></custom-style><app-location route="{{route}}"></app-location><app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}" active="{{pageActive}}"></app-route><app-route route="{{route}}" pattern="/youtube/:app" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}" active="{{pageActive}}"></app-route><app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}"></app-route><app-drawer-layout><app-drawer id="drawer" opened="{{drtgl}}" slot="drawer"><youtube-toolbar collapsed$="{{videoPageActive}}"><youtube-search route="[[pageTail]]" label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search></youtube-toolbar><validate-input label="Search pages" value="{{routeTail.path}}"></validate-input><iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation"><a name="search" href="/youtube/search/" on-click="_drToggle">search</a> <a name="channel" href="/youtube/channel/" on-click="_drToggle">channel</a> <a name="profile" href="/youtube/profile/" on-click="_drToggle">profile</a></iron-selector></app-drawer><iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main"><page-video name="video" id="video" route="{{route}}" resize="[[resize]]" active="{{pageActive}}"></page-video><page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}"></page-search><page-view404 name="view404"></page-view404></iron-pages></app-drawer-layout></template><script>class pageYoutube extends Polymer.Element{static get is(){return'page-youtube'}constructor(){super()}static get properties(){return{page:{type:String,reflectToAttribute:!0,observer:'_pageChanged',notify:!0},route:{type:Object,notify:!0},data:{type:Object,notify:!0},routeTail:{type:Object,notify:!0},pageActive:{type:Boolean,reflectToAttribute:!0,notify:!0},rootPath:{type:String,value:'/'},pageTail:{type:Object,notify:!0},pageQuery:{type:Object,notify:!0},pageData:{type:Object,notify:!0,observer:'_routePageChanged'},searchTail:{type:Object,notify:!0},searchQuery:{type:Object,notify:!0,observer:'logsh'},searchData:{type:Object,notify:!0},channelquery:{type:Object,notify:!0,observer:'logch'},channelData:{type:Object,notify:!0},channelTail:{type:Object,notify:!0},videoTail:{type:Object,notify:!0},videoquery:{type:Object,notify:!0},videoRouteData:{type:Object,notify:!0},pageActive:{type:Boolean},opened:{type:Boolean,value:!1,notify:!0,reflectToAttribute:!0,observer:'_drToggle'},drtgl:{type:Boolean,notify:!0},resize:{type:Boolean,notify:!0,observer:'_messenger'},newCategory:{type:String},videoData:{type:Object,observer:'_videoDataChanged'},videos:{type:Array,value:function(){return[]},notify:!0},dataq:{type:String,value:'zen',notify:!0},time:{type:String,notify:!0},data:{type:Object},datavid:{type:Object},query:{type:Object}}}static get observers(){}_drToggle(a){console.log(this.pageActive),!0===this.pageActive&&(this.drtgl=a)}_videoDataChanged(a){var b=[],c=this;a&&a.items.forEach(function(a){var d={id:a.id.videoId,title:a.snippet.title,shortTitle:c.removeBadCharacters(a.snippet.title.toLocaleLowerCase())+' ...!!',thumbnail:a.snippet.thumbnails.medium.url,channelTitle:a.snippet.channelTitle.toLocaleLowerCase(),channelId:a.snippet.channelId,videoItem:a};b.push(d)}),this.set('videos',b)}removeBadCharacters(a){let b=a.split(' '),c=[];return b.map((a)=>{c.push(a.match(/\w[A-z]*/))}),c.join(' ')}attached(){this.route&&this.route.path||this.set('route.path','yotube/search/')}_messenger(a){this.$.video.resize=a}_routePageChanged(a){this.page='youtube'===a.app?'search':a.app}_pageChanged(a){var b=this.resolveUrl('page-'+a+'.html');Polymer.importHref(b,null,null,!0)}}window.customElements.define(pageYoutube.is,pageYoutube);</script></dom-module></dom-module></body></html>
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt-->
+
+<dom-module id="page-youtube">
+  <template id="page-template">
+    <custom-style>
+      <style>
+        :host {
+          --app-primary-color: rgb(207, 29, 23);
+          --app-secondary-color: black;
+          --app-third-color: rgb(66, 133, 244);
+          display: block;
+        }
+
+        body {
+          background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+        }
+
+        app-drawer-layout:not([narrow]) [drawer-toggle] {
+          display: none;
+        }
+
+        iron-pages {
+          transition: transform 0.3s;
+        }
+
+        page-search {
+          display: block;
+          padding: 4px 1px 1px 3px;
+        }
+
+        app-drawer {
+          --app-drawer-content-container: {
+            background-color: rgb(253, 250, 250);
+            ;
+          }
+        }
+
+        app-drawer.lower {
+          top: 4em;
+          /* position: relative; */
+        }
+
+        app-header paper-icon-button {
+          --paper-icon-button-ink-color: white;
+        }
+
+        app-drawer {
+          z-index: 1;
+          --app-drawer-content-container: {
+            background-color: #adc2d28c;
+          }
+        }
+
+        .drawer-list {
+          margin: 0 20px;
+        }
+
+        .drawer-list a {
+          display: block;
+          padding: 0 16px;
+          text-decoration: none;
+          color: var(--app-secondary-color);
+          line-height: 40px;
+        }
+
+        .drawer-list a.iron-selected {
+          color: black;
+          font-weight: bold;
+        }
+
+        [main-title] {
+          font-weight: lighter;
+          margin-left: 108px;
+        }
+
+        [condensed-title] {
+          font-weight: lighter;
+          margin-left: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        [condensed-title] i {
+          font-weight: 100;
+          font-style: normal;
+        }
+
+        app-drawer {
+          --app-drawer-content-container: {
+            background: linear-gradient(to right, #b5b0b5 0%, #b5b2e4 5%, #d8d5e2 50%, #b5b2e4 95%, #b5b0b5 100%);
+          }
+        }
+
+        @media (max-width: 640px) {
+          [main-title] {
+            margin-left: 50px;
+            font-size: 30px;
+          }
+          [condensed-title] {
+            font-size: 15px;
+          }
+          app-drawer {
+            --app-drawer-content-container: {
+              background: linear-gradient(to right, #b5b0b5 0%, #b5b2e4 5%, #d8d5e2 50%, #b5b2e4 95%, #b5b0b5 100%);
+              position: absolute;
+              top: -2px;
+              z-index: 2;
+            }
+          }
+        }
+
+        :host([video-page-active]) {
+          overflow: hidden;
+        }
+
+        :host([video-page-active]) iron-pages {
+          transform: translateY(-170px);
+        }
+
+        app-toolbar.tall {
+          top: 0px;
+          height: 0px;
+          z-index: 0;
+        }
+
+        app-toolbar.tall[open] {
+          background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+          position: fixed;
+          right: 8%;
+          top: 38px;
+          width: 62%;
+          transition: height 0.5s ease-in;
+          height: 93px;
+          z-index: 2;
+          ;
+        }
+
+        @media (max-width: 1080px) {
+          app-toolbar.tall[open] {
+            top: 35px;
+            width: 58%;
+          }
+        }
+
+        @media (max-width: 920px) {
+          app-toolbar.tall[open] {
+            top: 35px;
+            width: 53%;
+          }
+        }
+
+        @media (max-width: 820px) {
+          app-toolbar.tall[open] {
+            top: 35px;
+            width: 48%;
+          }
+        }
+
+        @media (max-width: 700px) {
+          app-toolbar.tall[open] {
+            top: 35px;
+            width: 42%;
+          }
+        }
+
+        @media (max-width: 700px) {
+          app-toolbar.tall[open] {
+            top: 35px;
+            width: 42%;
+          }
+        }
+
+        @media (max-width: 640px) {
+          app-toolbar.tall[open] {
+            top: 35px;
+            width: 82%;
+          }
+          app-toolbar.tall a {
+            width: 100%;
+          }
+        }
+
+        app-drawer-layout {
+          position: static;
+        }
+
+        paper-input {
+          color: var(--paper-red-300);
+          --paper-input-container-input-color: #00e7ff
+        }
+
+        #val {
+          background: linear-gradient(to right, rgba(70, 68, 70, 0) 0%, #070401 5%,
+          #464446 50%, #040500 95%, rgba(70, 68, 70, 0) 100%);
+          border-radius: 6px;
+          padding: 6px;
+          margin-left: 15px;
+          width: 100%;
+        }
+      </style>
+    </custom-style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}" active="{{pageActive}}">
+    </app-route>
+    <!--*app-route /youtube/ - app link -->
+    <app-route route="{{route}}" pattern="/youtube/:app" data="{{pageData}}" tail="{{pageTail}}" query-params="{{pageQuery}}"
+      active="{{pageActive}}">
+    </app-route>
+    <!--app-route /videos/-->
+    <app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}">
+    </app-route>
+    <app-toolbar title class="tall" open$="[[open]]">
+      <paper-input always-float-label id="val" label="Youtube Search" value="{{inputDelay}}" on-click="clear"></paper-input>
+    </app-toolbar>
+    <app-drawer-layout id="layout">
+      <app-drawer id="drawer" opened="{{drtgl}}" slot="drawer">
+        <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
+                <b hidden id="not-signed-in">Not signed in!</b>
+              </google-signin-->
+        <youtube-toolbar collapsed$="{{videoPageActive}}">
+          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+        </youtube-toolbar>
+
+        <validate-input label="Search pages" value="{{routeTail.path}}">
+        </validate-input>
+        <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="search" href="/youtube/search/list?api=search&q={{inputCache}}" on-click="_drToggle">search</a>
+          <a name="channel" href="/youtube/channel/" on-click="_drToggle">channel</a>
+          <a name="profile" href="/youtube/profile/" on-click="_drToggle">profile</a>
+        </iron-selector>
+      </app-drawer>
+
+      <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
+        <page-video name="video" id="video" route="{{route}}" items="{{videos}}" resize="[[resize]]" active="{{pageActive}}">
+        </page-video>
+        <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}" input-cache="{{inputCache}}" open="{{srtgl}}">
+        </page-search>
+        <page-view404 name="view404"></page-view404>
+      </iron-pages>
+      </div>
+    </app-drawer-layout>
+    <!--code>google-signin-offline</code> events:
+    <span>{{offlineCode}}</span>
+    </p>
+    <p>Only display "not signed in" element after auth state is initialized (avoid flickering):
+      <b hidden id="not-signed-in">Not signed in!</b>
+    </p>
+    <p>
+      <button on-click="disconnect">Disconnect to start over</button>
+    </p-->
+    <!--google-signin-aware scopes="{{scope}}" openid-prompt="{{openidPromptValue}}" initialized="{{initialized}}" signed-in="{{signedIn}}"
+      offline="{{offline}}" is-authorized="{{isAuthorized}}" need-additional-auth="{{needAdditionalAuth}}" on-google-signin-aware-error="handleSignInError"
+      on-google-signin-aware-success="handleSignIn" on-google-signin-offline-success="handleOffline" on-google-signin-aware-signed-out="handleSignOut"
+      on-signed-in-changed="handleStateChange" on-initialized-changed="handleStateChange">
+    </google-signin-aware-->
+  </template>
+  <script>
+    class pageYoutube extends Polymer.Element {
+      static get is() {
+        return 'page-youtube';
+      }
+
+      constructor() {
+        super();
+      }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+            notify: true
+          },
+          route: {
+            type: Object,
+            notify: true
+          },
+          data: {
+            type: Object,
+            notify: true
+          },
+          routeTail: {
+            type: Object,
+            notify: true
+          },
+          pageActive: {
+            type: Boolean,
+            reflectToAttribute: true,
+            notify: true
+          },
+          rootPath: {
+            type: String,
+            value: "/"
+          },
+          pageTail: {
+            type: Object,
+            notify: true
+          },
+          pageQuery: {
+            type: Object,
+            notify: true,
+            //observer: 'log'
+          },
+          pageData: {
+            type: Object,
+            notify: true,
+            observer: '_routePageChanged'
+          },
+          searchTail: {
+            type: Object,
+            notify: true
+          },
+          searchQuery: {
+            type: Object,
+            notify: true,
+            observer: 'logsh'
+          },
+          searchData: {
+            type: Object,
+            notify: true
+          },
+          channelquery: {
+            type: Object,
+            notify: true,
+            observer: 'logch'
+          },
+          channelData: {
+            type: Object,
+            notify: true
+          },
+          channelTail: {
+            type: Object,
+            notify: true
+          },
+          videoTail: {
+            type: Object,
+            notify: true
+          },
+          videoquery: {
+            type: Object,
+            notify: true
+          },
+          videoRouteData: {
+            type: Object,
+            notify: true
+          },
+          pageActive: {
+            type: Boolean
+          },
+          inputCache: {
+            type: String,
+            notify: true
+          },
+          opened: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true,
+            observer: '_drToggle'
+          },
+          drtgl: {
+            type: Boolean,
+            notify: true
+          },
+          open: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true,
+          },
+          resize: {
+            type: Boolean,
+            notify: true,
+            observer: '_messenger'
+          },
+          newCategory: {
+            type: String
+          },
+          videoData: {
+            type: Object,
+            observer: '_videoDataChanged',
+          },
+          videos: {
+            type: Array,
+            value: function () {
+              return [];
+            },
+            notify: true
+          },
+
+          dataq: {
+            type: String,
+            value: "zen",
+            notify: true
+          },
+          time: {
+            type: String,
+            notify: true
+          },
+          data: {
+            type: Object
+          },
+          datavid: {
+            type: Object
+          },
+          query: {
+            type: Object,
+            // observer: 'log'
+          },
+          inputDelay: {
+            type: String,
+            observer: '_inputer',
+            notify: true
+          },
+          inputCache: {
+            type: String,
+            value: "",
+            notify: true
+          },
+          timouter: {
+            type: Number
+          },
+        }
+      };
+
+      static get observers() {
+        /* return [
+           '_routePageChanged(data.page)',
+         ];*/
+      }
+      ready() {
+        super.ready()
+        window.addEventListener("orientation-change", (function (e) {
+          this._drToggle("layout", e.detail)
+        }).bind(this))
+      }
+      _drToggle(data, detail) {
+        if (this.pageActive === true && window.innerWidth <= 640 && data !== "layout") {
+          this.drtgl = !this.drtgl
+        }
+        if (data === "layout") {
+          if (detail === 90) {
+            //    if (!window.innerWidth <= 640)
+            // this.$.layout.$.contentContainer.style.marginLeft = "0px"
+            setTimeout(() => {
+              this.$.drawer.close()
+              this.$.layout.$.contentContainer.style.marginLeft = "0px"
+            }, 50)
+            window.scrollTo({}, 52)
+          } else {
+            setTimeout(() => {
+              if (window.innerWidth <= 640) {
+                console.log(window.innerWidth)
+                } else {
+                this.$.layout.$.contentContainer.style.marginLeft = "var(--app-drawer-width, 256px)"
+              }
+            }, 100)
+          }
+        }
+      }
+      _srToggle(data) {
+        console.log('pageActive', this.pageActive)
+        if (this.pageActive === true)
+          this.srtgl = !this.srtgl
+      }
+      _inputer(char, clear) {
+        if (this.timouter > 0)
+          clearTimeout(this.timouter)
+        if (clear !== true) {
+          this.inputCache = char
+          this.timouter = setTimeout(() => {
+            if (this.inputCache.length > 0) {
+              window.history.pushState({}, null, '/youtube/search/list?api=search&q=' + this.inputCache)
+              window.dispatchEvent(new CustomEvent('location-changed'));
+            }
+          }, 750)
+        } else {
+          this.inputDelay = ""
+        }
+      }
+
+      clear() {
+        this._inputer("", true)
+      }
+      _videoDataChanged(data) {
+        var allVideos = [];
+        var that = this;
+        if (data)
+          // console.log(data)
+          data.items.forEach(function (videoItem) {
+            var youtubeVideo = {
+              id: videoItem.id.videoId,
+              title: videoItem.snippet.title,
+              shortTitle: that.removeBadCharacters(videoItem.snippet.title.toLocaleLowerCase()) + " ...!!",
+              thumbnail: videoItem.snippet.thumbnails.medium.url,
+              channelTitle: videoItem.snippet.channelTitle.toLocaleLowerCase(),
+              channelId: videoItem.snippet.channelId,
+              videoItem: videoItem
+            };
+
+            allVideos.push(youtubeVideo);
+          })
+        this.set('videos', allVideos);
+      }
+
+      removeBadCharacters(char) {
+        let arr = char.split(" ")
+        let arr2 = []
+        arr.map(item => {
+          arr2.push(item.match(/\w[A-z]*/))
+        })
+        return arr2.join(" ")
+      }
+
+      attached() {
+        // If we do not have an initial URL, we redirect to /search
+        if (!this.route || !this.route.path) {
+          this.set('route.path', 'yotube/search/');
+        }
+      }
+      _messenger(data) {
+        this.$.video.resize = data
+      }
+
+      _routePageChanged(page) {
+        // console.log("page.app", page.app)
+        this.page = page.app !== "youtube" ? page.app : "search"
+        //console.log("pageData.app", this.pageData.app)       
+      }
+
+      _pageChanged(page) {
+        var resolvedPageUrl = this.resolveUrl('page-' + page + '.html');
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          null,
+          true);
+      }
+
+    }
+    window.customElements.define(pageYoutube.is, pageYoutube);
+  </script>
+</dom-module>

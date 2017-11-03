@@ -1,0 +1,54 @@
+<link rel="import" href="../../../../bower_components/iron-validator-behavior/iron-validator-behavior.html">
+<link rel="import" href="../../../../bower_components/iron-ajax/iron-ajax.html">
+<dom-module id="search-validator">
+    <script>        
+        class searchValidator extends Polymer.Element {
+            static get is() {
+                return 'search-validator'
+            }
+
+            static get properties() {
+                return {
+                    valid: {
+                        type: Boolean,
+                        notify: true
+                    },
+                    values: {
+                        type: String,
+                        observer: 'validate',
+                        notify: true
+                    },
+                    jsonData:Object
+                }
+            }
+
+            validate(obj) {
+                var valid = false
+                this.jsonData.searches.map((page) =>{
+                    if (obj !== page) {
+                        if (valid === false)
+                            valid = this.checkAlter("object", obj);
+                    } else {
+                        valid = true
+                    }
+                })
+                this.set("valid", valid)
+            }
+
+            checkAlter(type, values) {
+                var valid
+                var value
+                if (values in this.jsonData.alter) {
+                    value = this.jsonData.alter[values].value
+                    valid = true
+                } else {
+                    valid = false
+                }
+                if (valid === true)
+                    this.set("values", value)
+                return valid
+            }
+        }
+        window.customElements.define(searchValidator.is, searchValidator);
+    </script>
+</dom-module>

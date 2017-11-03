@@ -1,0 +1,51 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/app-shell.html",
+  "fragments": [
+    "src/routes/page-home.html",
+    "src/routes/page-login.html",
+    "src/routes/page-view404.html",
+    "src/routes/youtube/page-youtube.html",
+    "src/routes/youtube/page-search.html",
+    "src/routes/youtube/page-video.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "bower.json"
+  ],
+  "extraDependencies": [
+    "manifest.json",
+    "favicon.ico",
+    "bower_components/*"
+  ],
+  "builds": [
+    {
+      "name": "bundled-custom",
+      "bundle": {
+        "stripComments": true,
+        "inlineCss": false,
+        "sourcemaps": true
+      },
+      "addServiceWorker": true,
+      "insertPrefetchLinks": true,
+      "swPrecacheConfig": "sw-precache-config.js",
+      "addPushManifest": true,
+      "js": {
+        "compile": false,
+        "minify": true
+      },
+      "css": {
+        "minify": true
+      },
+      "html": {
+        "minify": true
+      }
+    }
+  ],
+  "lint": {
+    "rules": [
+      "polymer-2"
+    ]
+  }
+}
