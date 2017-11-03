@@ -418,9 +418,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _playingChanged(playing) {
         this.set('queryParams.state', playing ? 'playing' : 'paused');
         if (this.queryParams.state === "playing"){
-           setTimeout( function(){
+           /*setTimeout( function(){
               this.$.player.$.player.play()
-              }, 150)
+              }, 150)*/
            }
         this.getTime(this.queryParams)
       }
