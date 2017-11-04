@@ -35,7 +35,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-top: 31px;
       }
 
-      #controls {       
+      #controls {
         color: #fff;
         @apply --layout-vertical;
         @apply --layout-center-center;
@@ -121,16 +121,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         #heg {
           height: 1000px;
         }
-      } 
-      
+      }
+
       @media (max-height: 1024px) {
         #heg {
           height: 1000px;
         }
       }
+
       youtube-lite.player {
+        width: 95% !important;
         height: 33%;
         top: 91px;
+        left: 28px;
+        ;
       }
 
       youtube-lite.player[wide] {
@@ -164,9 +168,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
           on-down="pause" on-up="play"></time-input>
         <nav class="nav" id="nav">
-            <div class="nav-item">
-                
-              </div>
+          <div class="nav-item">
+
+          </div>
           <div class="nav-item">
             <p>
               <div class="type">Time Elapsed</div>
@@ -190,7 +194,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           </div>
           <div class="nav-item">
             <paper-icon-button class="left" icon="menu" on-click="_drToggle"></paper-icon-button>
-          </div>          
+          </div>
         </nav>
 
       </div>
@@ -292,7 +296,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready() {
         super.ready()
         window.addEventListener("orientation-change", (function (e) {
-        this.orient("layout", e.detail)
+          this.orient("layout", e.detail)
         }).bind(this))
       }
       static get observers() {
@@ -417,11 +421,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _playingChanged(playing) {
         this.set('queryParams.state', playing ? 'playing' : 'paused');
-        if (this.queryParams.state === "playing"){
-           /*setTimeout( function(){
-              this.$.player.$.player.play()
-              }, 150)*/
-           }
+        if (this.queryParams.state === "playing") {
+          /*setTimeout( function(){
+             this.$.player.$.player.play()
+             }, 150)*/
+        }
         this.getTime(this.queryParams)
       }
 
