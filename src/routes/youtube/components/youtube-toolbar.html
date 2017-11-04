@@ -1,0 +1,71 @@
+<html>
+
+<head>
+    <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+    <link rel="import" href="../../../../bower_components/paper-styles/shadow.html">
+    <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+    <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+</head>
+
+<body>
+    <dom-module id="youtube-toolbar">
+        <template>
+            <style>
+                :host {
+                    display: block;
+                    position: relative;
+                    --paper-icon-button-ink-color: #fff;
+                    --iron-icon-fill-color: #fff;
+                    background-color: #f5f5dc;
+                }
+
+                :host([collapsed]) #background {
+                    transform: scaleY(calc(60/230));
+                }
+
+                :host([collapsed]) #youtube-logo {
+                    transform: scale(calc(60/230)) translateY(-195px);
+                }
+
+                :host([collapsed]) #back {
+                    transform: translateX(0);
+                }
+
+                :host([collapsed]) #content {
+                    opacity: 0;
+                    transition-delay: 0s;
+                    transform: translateY(-10px);
+                }
+
+                #background {
+                    height: 230px;
+                    background-image: url("../../../../images/youtubes-logo.png");
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    @apply --shadow-elevation-2dp;
+                    transform-origin: 0 0;
+                    transition: transform 0.3s;
+                    transform: scaleY(1);
+                }
+
+                #content {
+                    display: block;
+                    position: absolute;
+                    bottom: 0;
+                    width: 95%;
+                    transition: transform 0.15s, opacity 0.15s;
+                    transition-delay: 0.2s;
+                    padding: 10px;
+                }
+            </style>
+            <div id="background"></div>
+            <div id="content">
+                <slot name="input"></slot>
+                <slot></slot>
+            </div>
+        </template>
+        <script>Polymer({ is: 'youtube-toolbar' });</script>
+    </dom-module>
+</body>
+
+</html>

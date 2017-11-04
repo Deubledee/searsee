@@ -6,7 +6,7 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt-->
-
+<link rel="import" href="./components/youtube-toolbar.html">
 <dom-module id="page-youtube">
   <template id="page-template">
     <custom-style>
@@ -217,7 +217,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--app-route /videos/-->
     <app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}">
     </app-route>
-    <!-- app toolbar -->
     <app-toolbar title class="tall" open$="[[open]]">
       <paper-input always-float-label id="val" label="Youtube Search" value="{{inputDelay}}" on-click="clear"></paper-input>
     </app-toolbar>
@@ -225,8 +224,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" opened="{{drtgl}}" slot="drawer">
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
-              </google-signin-->      
-          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>        
+              </google-signin-->
+        <youtube-toolbar></youtube-toolbar>
+          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+        </youtube-toolbar>
 
         <validate-input label="Search pages" value="{{routeTail.path}}">
         </validate-input>
