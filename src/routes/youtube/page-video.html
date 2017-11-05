@@ -58,12 +58,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: none
       }
 
-      /*  #heg {
-        height: 894px;
-        width: 100%;
-        padding: 5px;
-      }*/
-
       .type {
         font-family: sans-serif;
         font-size: 11px;
@@ -123,10 +117,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 25px;
       }
 
-      youtube-lite.player {
+      youtube-lite.player[default] {
         width: 100% !important;
-        height: 43vh;
-        top: 3px;
+        height: 43vh !important;
+        top: 3px !important;
       }
 
       youtube-lite.player[wide] {
@@ -149,60 +143,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      @media (max-height: 320px) {
-        youtube-lite.player[wide] {
-          width: 178% !important;
-          height: 289px !important;
-        }
+      youtube-lite[wide] {
+        height: 254px !important;
+        top: -8px !important;
+        left: 0px!important;
       }
 
-      @media screen and (max-width: 568px),
-      screen and (max-height: 320px) {
-        youtube-lite.player[wide] {
-          height: 254px !important;
-          top: 46px !important;
-        }
+      youtube-lite[widei] {
+        width: 100% !important;
+        height: 312px !important;
+        top: -18px !important;
       }
 
-      @media (max-height: 412px) {
-        youtube-lite.player[wide] {
-          width: 100% !important;
-          height: 380px;
-          top: 33px;
-          margin-bottom: 48px;
-        }
-      }
 
-      @media screen and (max-width: 640px){
-        youtube-lite.player[wide] {
-          width: 100% !important;
-          height: 315px !important;
-          top: -18px !important;
-        }
-      }
-      @media screen and (max-width: 732px),
-      screen and (min-height: 412px) {
-        youtube-lite.player[wide] {
-          height: 388px!important;
-          top: 33px!important;
-          margin-bottom: 117px!important;
-          left: 2px !important;
-        }
-      }
-
-      @media (max-height: 414px) {
-        youtube-lite.player[wide] {
-          height: 345px;
-          left: 22px;
-          margin-bottom: 128px;
-          top: 89px;
-        }
-      }
-
-      @media (max-height: 375px) {
-        youtube-lite.player[wide] {
-          height: 302px
-        }
+      youtube-lite[wideo] {
+        height: 370px;
+        top: 33px;
+        margin-bottom: 117px;
+        left: 2px;
       }
     </style>
 
@@ -221,11 +179,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     that's even aware of routing or the URL. -->
 
     <nav class="navbar navbar-expand-lg ">
-      <youtube-lite class="player" wide$="[[wide]]" id="player" video-id="{{videData.page}}" state="{{queryParams.state}}" current-time="{{queryParams.time}}"
-        start-time="{{queryParams.time}}">
+      <youtube-lite class="player" default$="[[default]]" id="player" video-id="{{videData.page}}" state="{{queryParams.state}}"
+        current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
       </youtube-lite>
-
-
     </nav>
     <div id="heg" class="container" wide$="[[wide]]">
       <div class="row">
@@ -353,7 +309,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             notify: true,
             reflectToAttribute: true
           },
-          wide: {
+          default: {
+            type: Boolean,
+            value: true,
+            notify: true,
+            reflectToAttribute: true
+          },
+          wideo: {
             type: Boolean,
             value: false,
             notify: true,
@@ -395,12 +357,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       orient(data, detail) {
         if (detail === 90) {
-          this.wide = true
+          this.default = false
+          this.$.player.style.width = (window.innerWidth - 40) + "px"
+          this.$.player.style.height = (window.screen.height - 45) + "px"
+          this.$.player.style.top = (window.screen.height / 9) + "px"
+          this.$.player.style.marginBottom = "83px"
           this.$.controls.style.display = "none"
           this.$.results.style.display = "none"
           window.document.body.style.overflowY = "hidden"
         } else {
-          this.wide = false
+          this.default = true
+          this.$.player.style.marginBottom = "0px"
           window.document.body.style.overflowY = "auto"
           this.$.controls.style.display = "block"
           this.$.results.style.display = "block"
