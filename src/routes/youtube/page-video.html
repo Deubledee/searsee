@@ -356,19 +356,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.bottom = !this.bottom
       }
       orient(data, detail) {
-        if (detail === 90) {
-         // 
+        if (detail === 90) {         // 
           this.default = false
           setTimeout(() => {
+            this.$.player.style.marginBottom = "83px"
+            this.$.controls.style.display = "none"
+            this.$.results.style.display = "none"
+            window.document.body.style.overflowY = "hidden"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
-            this.$.player.style.height = (window.screen.height - 45) + "px"
-            this.$.player.style.top = (window.screen.height / 12) + "px"
-           // alert("width " + window.innerWidth + " heigth " + window.screen.height)
-          }, 500)
-          this.$.player.style.marginBottom = "83px"
-          this.$.controls.style.display = "none"
-          this.$.results.style.display = "none"
-          window.document.body.style.overflowY = "hidden"
+            this.$.player.style.height = (window.screen.height - 50) + "px"
+            this.$.player.style.top = (window.screen.height / 10) + "px"
+            // alert("width " + window.innerWidth + " heigth " + window.screen.height)
+          }, 1000)
         } else {
           this.default = true
           this.$.player.style.marginBottom = "0px"
