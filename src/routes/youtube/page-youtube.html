@@ -94,8 +94,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         app-drawer {
           --app-drawer-content-container: {
-            background: linear-gradient(to right, #b5b0b5 0%, #b5b2e4 5%, #d8d5e2 50%, #b5b2e4 95%, #b5b0b5 100%);
+            background: linear-gradient(to top left, #171719 0%, #908f8f 51%, #d0c5d0 76%);
+            color: #bd8130;
           }
+        }
+
+        app-drawer.drawer-list a.iron-selected {
+             color: #bd8130;
         }
 
         @media (max-width: 640px) {
@@ -108,102 +113,102 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           app-drawer {
             --app-drawer-content-container: {
-              background: linear-gradient(to right, #b5b0b5 0%, #b5b2e4 5%, #d8d5e2 50%, #b5b2e4 95%, #b5b0b5 100%);
+              background: linear-gradient(to top, #171719 0%, #908f8f 51%, #d0c5d0 76%);
               position: absolute;
               top: -2px;
               z-index: 2;
             }
+
           }
-        }
 
-        :host([video-page-active]) {
-          overflow: hidden;
-        }
+          :host([video-page-active]) {
+            overflow: hidden;
+          }
 
-        :host([video-page-active]) iron-pages {
-          transform: translateY(-170px);
-        }
+          :host([video-page-active]) iron-pages {
+            transform: translateY(-170px);
+          }
 
-        app-toolbar.tall {
-          top: 0px;
-          height: 0px;
-          z-index: 0;
-        }
+          app-toolbar.tall {
+            top: 0px;
+            height: 0px;
+            z-index: 0;
+          }
 
-        app-toolbar.tall[open] {
-          background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
-          position: fixed;
-          right: 8%;
-          top: 38px;
-          width: 62%;
-          transition: height 0.5s ease-in;
-          height: 93px;
-          z-index: 2;
-          ;
-        }
-
-        @media (max-width: 1080px) {
           app-toolbar.tall[open] {
-            top: 35px;
-            width: 58%;
+            background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+            position: fixed;
+            right: 8%;
+            top: 38px;
+            width: 62%;
+            transition: height 0.5s ease-in;
+            height: 93px;
+            z-index: 2;
+            ;
           }
-        }
 
-        @media (max-width: 920px) {
-          app-toolbar.tall[open] {
-            top: 35px;
-            width: 53%;
+          @media (max-width: 1080px) {
+            app-toolbar.tall[open] {
+              top: 35px;
+              width: 58%;
+            }
           }
-        }
 
-        @media (max-width: 820px) {
-          app-toolbar.tall[open] {
-            top: 35px;
-            width: 48%;
+          @media (max-width: 920px) {
+            app-toolbar.tall[open] {
+              top: 35px;
+              width: 53%;
+            }
           }
-        }
 
-        @media (max-width: 700px) {
-          app-toolbar.tall[open] {
-            top: 35px;
-            width: 42%;
+          @media (max-width: 820px) {
+            app-toolbar.tall[open] {
+              top: 35px;
+              width: 48%;
+            }
           }
-        }
 
-        @media (max-width: 700px) {
-          app-toolbar.tall[open] {
-            top: 35px;
-            width: 42%;
+          @media (max-width: 700px) {
+            app-toolbar.tall[open] {
+              top: 35px;
+              width: 42%;
+            }
           }
-        }
 
-        @media (max-width: 640px) {
-          app-toolbar.tall[open] {
-            top: 35px;
-            width: 82%;
+          @media (max-width: 700px) {
+            app-toolbar.tall[open] {
+              top: 35px;
+              width: 42%;
+            }
           }
-          app-toolbar.tall a {
+
+          @media (max-width: 640px) {
+            app-toolbar.tall[open] {
+              top: 35px;
+              width: 82%;
+            }
+            app-toolbar.tall a {
+              width: 100%;
+            }
+          }
+
+          app-drawer-layout {
+            position: static;
+          }
+
+          paper-input {
+            color: var(--paper-red-300);
+            --paper-input-container-input-color: #00e7ff
+          }
+
+          #val {
+            background: linear-gradient(to right, rgba(70, 68, 70, 0) 0%, #070401 5%,
+            #464446 50%, #040500 95%, rgba(70, 68, 70, 0) 100%);
+            border-radius: 6px;
+            padding: 6px;
+            margin-left: 15px;
             width: 100%;
           }
-        }
-
-        app-drawer-layout {
-          position: static;
-        }
-
-        paper-input {
-          color: var(--paper-red-300);
-          --paper-input-container-input-color: #00e7ff
-        }
-
-        #val {
-          background: linear-gradient(to right, rgba(70, 68, 70, 0) 0%, #070401 5%,
-          #464446 50%, #040500 95%, rgba(70, 68, 70, 0) 100%);
-          border-radius: 6px;
-          padding: 6px;
-          margin-left: 15px;
-          width: 100%;
-        }
       </style>
     </custom-style>
 
@@ -226,7 +231,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
         <youtube-toolbar></youtube-toolbar>
-          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+        <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
         </youtube-toolbar>
 
         <validate-input label="Search pages" value="{{routeTail.path}}">
@@ -460,7 +465,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             setTimeout(() => {
               if (window.innerWidth <= 640) {
                 console.log(window.innerWidth)
-                } else {
+              } else {
                 this.$.layout.$.contentContainer.style.marginLeft = "var(--app-drawer-width, 256px)"
               }
             }, 100)

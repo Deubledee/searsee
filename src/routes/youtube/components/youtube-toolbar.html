@@ -1,7 +1,7 @@
 <html>
 
 <head>
-    <link rel="import" href="../../../../bower_components/polymer/polymer.html">
+    <link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
     <link rel="import" href="../../../../bower_components/paper-styles/shadow.html">
     <link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
     <link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
@@ -39,7 +39,7 @@
 
                 #background {
                     height: 230px;
-                    background-image: url("../../../../images/youtubes-logo.png");
+                    background-image: url("../../../../images/youtubes-logo-text.png");
                     background-position: center;
                     background-repeat: no-repeat;
                     @apply --shadow-elevation-2dp;
@@ -59,12 +59,21 @@
                 }
             </style>
             <div id="background"></div>
-            <div id="content">
-                <slot name="input"></slot>
+            <div id="content" collapsed$="[[collapsed]]">
+                <div id="#youtube-logo" collapsed$="[[collapsed]]">
+                    <slot name="logo"></slot>
+                </div>
                 <slot></slot>
             </div>
         </template>
-        <script>Polymer({ is: 'youtube-toolbar' });</script>
+        <script>
+            class youtubeToolbar extends Polymer.Element {
+                static get is() {
+                    return 'youtube-toolbar'
+                }
+            }
+            window.customElements.define(youtubeToolbar.is, youtubeToolbar);
+        </script>
     </dom-module>
 </body>
 
