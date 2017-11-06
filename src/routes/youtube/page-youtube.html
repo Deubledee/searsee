@@ -94,13 +94,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         app-drawer {
           --app-drawer-content-container: {
-            background: linear-gradient(to top left, #171719 0%, #908f8f 51%, #d0c5d0 76%);
+            background: linear-gradient(to bottom, #fff 27%, #000 100%);
             color: #bd8130;
           }
         }
 
         app-drawer.drawer-list a.iron-selected {
-             color: #bd8130;
+          color: #bd8130;
         }
 
         @media (max-width: 640px) {
@@ -113,7 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }
           app-drawer {
             --app-drawer-content-container: {
-              background: linear-gradient(to top, #171719 0%, #908f8f 51%, #d0c5d0 76%);
+              background: linear-gradient(to bottom, #fff 27%, #000 100%);
               position: absolute;
               top: -2px;
               z-index: 2;
@@ -230,9 +230,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
-        <youtube-toolbar></youtube-toolbar>
-        <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+
+
+
+        <youtube-toolbar>
+          <img slot="logo" src="../../../images/youtubes-logo-text.png">
+          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
         </youtube-toolbar>
+
+
+
 
         <validate-input label="Search pages" value="{{routeTail.path}}">
         </validate-input>

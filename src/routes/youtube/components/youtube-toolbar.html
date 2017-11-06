@@ -19,48 +19,24 @@
                     background-color: #f5f5dc;
                 }
 
-                :host([collapsed]) #background {
-                    transform: scaleY(calc(60/230));
+                .youtube-logo {
+                    /* margin-left: 10px; */
+                    padding-left: 30px;
                 }
 
-                :host([collapsed]) #youtube-logo {
-                    transform: scale(calc(60/230)) translateY(-195px);
-                }
-
-                :host([collapsed]) #back {
-                    transform: translateX(0);
-                }
-
-                :host([collapsed]) #content {
-                    opacity: 0;
-                    transition-delay: 0s;
-                    transform: translateY(-10px);
-                }
-
-                #background {
-                    height: 230px;
-                    background-image: url("../../../../images/youtubes-logo-text.png");
+                #content {
+                    height: 67px;
                     background-position: center;
                     background-repeat: no-repeat;
                     @apply --shadow-elevation-2dp;
                     transform-origin: 0 0;
                     transition: transform 0.3s;
                     transform: scaleY(1);
-                }
-
-                #content {
-                    display: block;
-                    position: absolute;
-                    bottom: 0;
-                    width: 95%;
-                    transition: transform 0.15s, opacity 0.15s;
-                    transition-delay: 0.2s;
-                    padding: 10px;
+                    background: linear-gradient(to bottom, #040500 0%, rgba(70, 68, 70, 0) 115%);
                 }
             </style>
-            <div id="background"></div>
             <div id="content" collapsed$="[[collapsed]]">
-                <div id="#youtube-logo" collapsed$="[[collapsed]]">
+                <div id="#youtube-logo" class="youtube-logo" collapsed$="[[collapsed]]">
                     <slot name="logo"></slot>
                 </div>
                 <slot></slot>
