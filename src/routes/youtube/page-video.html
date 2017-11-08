@@ -114,7 +114,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       .navbar-bottom {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
-        height: 25px;
+        height: auto;
+        min-height: 24px
       }
 
       youtube-lite.player[default] {
@@ -140,6 +141,28 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         .navbar {
           top: 39px;
           margin-bottom: 35px;
+        }
+      }
+
+      @media (min-width: 992px) {
+        .navbar-expand-lg {
+          top: -24px
+        }
+        .player {
+          top: -6px;
+        }
+
+      }
+
+      @media (min-height: 992px) {
+        .slider {
+          margin-top: -25px;
+        }
+        .navbar-expand-lg {
+          top: -24px;
+        }
+        #controls {
+          height: 137px;
         }
       }
 
@@ -183,51 +206,47 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
       </youtube-lite>
     </nav>
-    <div id="heg" class="container" wide$="[[wide]]">
-      <div class="row">
-        <div id="controls" class="nav">
-          <div class="nav-item">
-            <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
-              on-down="pause" on-up="play"></time-input>
-          </div>
+    <div id="heg" class="slider" wide$="[[wide]]">
+      <div id="controls" class="nav">
+        <div class="nav-item">
+          <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
+            on-down="pause" on-up="play"></time-input>
         </div>
       </div>
-      <div class="row">
-        <nav class="navi nav" id="nav">
-          <div class="nav-item navtem">
-            <p>
-              <div class="type">Time Elapsed</div>
-              <div class="value"> {{transformedTime}} </div>
-              <h4></h4>
-            </p>
-          </div>
-          <div class="nav-item navtem">
-            <span>
-              <p></p>
-            </span>
-          </div>
-          <div class="nav-item navtem">
-            <p>
-              <div class="type">duration</div>
-              <div class="value2"> {{fulTime}}</div>
-            </p>
-          </div>
-          <div class="nav-item navtem">
-            <span>
-              <p></p>
-            </span>
-          </div>
-          <div class="nav-item navtem">
-            <paper-toggle-button id="state" active="{{playing}}">
-              [[queryParams.state]]
-            </paper-toggle-button>
-          </div>
-        </nav>
-      </div>
+      <nav class="navi nav" id="nav">
+        <div class="nav-item navtem">
+          <p>
+            <div class="type">Time Elapsed</div>
+            <div class="value"> {{transformedTime}} </div>
+            <h4></h4>
+          </p>
+        </div>
+        <div class="nav-item navtem">
+          <span>
+            <p></p>
+          </span>
+        </div>
+        <div class="nav-item navtem">
+          <p>
+            <div class="type">duration</div>
+            <div class="value2"> {{fulTime}}</div>
+          </p>
+        </div>
+        <div class="nav-item navtem">
+          <span>
+            <p></p>
+          </span>
+        </div>
+        <div class="nav-item navtem">
+          <paper-toggle-button id="state" active="{{playing}}">
+            [[queryParams.state]]
+          </paper-toggle-button>
+        </div>
+      </nav>
     </div>
-    <div class="row">
-      <div class="coll-xs-12 mie">
-        <paper-icon-button icon="menu" on-click="_drToggle"></paper-icon-button>
+    <div class="row" id="res">
+      <div class="coll-xs-12 mie" id="results">
+        <paper-icon-button  icon="menu" on-click="_drToggle"></paper-icon-button>
         <search-results id="results" class="width" mini="true" bottom="[[bottom]]" route="{{route}}" items="{{items}}">
         </search-results>
       </div>
@@ -321,6 +340,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             notify: true,
             reflectToAttribute: true
           },
+          lock: {
+            type: Boolean,
+            value: false
+          },
           Details: {
             type: Object,
             value: function () {
@@ -356,25 +379,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.bottom = !this.bottom
       }
       orient(data, detail) {
-        if (detail === 90) {         // 
+        let margin
+        if (detail === 90 && this.lock !== true) {
+          this.lock = true
           this.default = false
-          setTimeout(() => {
-            this.$.player.style.marginBottom = "83px"
-            this.$.controls.style.display = "none"
-            this.$.results.style.display = "none"
+          this.$.heg.style.display = "none"
+          this.$.results.style.display = "none"
+          this.$.player.style.display = "none"          
+          this.$.player.style.marginBottom = "83px"
+          setTimeout(() => {            
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
+            this.$.player.style.marginBottom = "83px"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
-            this.$.player.style.height = (window.screen.height - 53) + "px"
-            this.$.player.style.top = 30 + "px"
-            // alert("width " + window.innerWidth + " heigth " + window.screen.height)
-          }, 1000)
-        } else {
+            this.$.player.style.height = (window.screen.height - 60) + "px"
+            this.$.player.style.top = window.innerWidth > 640 ? "24px": "-12px"
+            this.$.player.style.display = "block"
+          },750)
+        }
+        if (detail === 0 && this.lock !== false) {
           this.default = true
-          this.$.player.style.marginBottom = "0px"
+          this.lock = false
           window.document.body.style.overflowY = "auto"
-          this.$.controls.style.display = "block"
-          this.$.results.style.display = "block"
+          setTimeout(() => {
+            this.$.player.style.marginBottom = "0px"
+            this.$.heg.style.display = "block"
+            this.$.results.style.display = "block"
+          }, 500)
         }
       }
       _toSeconds(obj) {
@@ -471,9 +502,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _playingChanged(playing) {
         this.set('queryParams.state', playing ? 'playing' : 'paused');
         if (this.queryParams.state === "playing") {
-          /*setTimeout( function(){
-             this.$.player.$.player.play()
-             }, 150)*/
+          setTimeout(() => {
+            this.orient("orient", window.screen.orientation.angle)
+            this.$.player.$.player.play()
+          }, 1000)
         }
         this.getTime(this.queryParams)
       }

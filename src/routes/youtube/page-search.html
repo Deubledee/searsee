@@ -65,7 +65,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 0;
         /* width: 100%; */
       }
-      
+
       #inputer {
         display: none
       }
@@ -90,7 +90,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       }
 
-      #val{
+      #val {
         display: none
       }
     </style>
@@ -99,7 +99,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-route route="{{route}}" pattern="youtube/search/:local" data="{{searchData}}" tail="{{searchTail}}" query-params="{{searchQuery}}">
     </app-route>
     <paper-input always-float-label id="val" label="Youtube Search" value="{{inputDelay}}" on-click="clear"></paper-input>
-    <search-results route="{{route}}" items="{{items}}">
+    <search-results route="{{route}}" items="{{items}}" open="[[open]]">
       loading...
     </search-results>
 
@@ -160,7 +160,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Array,
             notify: true,
             obsever: '_seethisshit'
-          },  
+          },
+          open: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true
+          },
           channel: {
             type: Object,
             value: function () {
@@ -196,10 +202,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.scrollTo({}, 0)
         this.items.map(data => {
         })
-      }
-      _srToggle(data) {
-        console.log('search', this.open)
-      }
+      }      
     }
     window.customElements.define(pageSearch.is, pageSearch);
   </script>

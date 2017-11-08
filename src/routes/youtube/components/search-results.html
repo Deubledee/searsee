@@ -30,13 +30,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             .content {
                 position: relative;
-                top: -26px;
+                top: 0px;
                 padding: 30px 5px 59px;
                 background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
                 color: #333;
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
-                margin-top: 62px;
+                margin-top: 36px;
                 margin-left: -4px;
+            }
+
+            .content[open] {
+                margin-top: 35px;
             }
 
             .content[bottom] {
@@ -182,7 +186,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             @media (max-width: 640px) {
                 .content {
                     margin: 36px -1px 0px -3px;
-                    box-shadow: none;
+                    margin-top: 36px;
+                    
+                }
+                .content[open] {
+                    margin-top: 35px;
+                    
                 }
                 .content[mini] {
                     width: 99%;
@@ -199,7 +208,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
         </app-route>
-        <div id="content" class="content" mini$="[[mini]]" bottom$="[[bottom]]">
+        <div id="content" class="content" mini$="[[mini]]" bottom$="[[bottom]]" open$="[[open]]">
             <iron-selector selected="[[routeTail.prefix]]" attr-for-selected="name" class="drawer-list" role="navigation">
                 <template is="dom-repeat" items="{{items}}" as="video">
                     <div class="float" mini$="[[mini]]">
@@ -249,6 +258,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         reflectToAttribute: true
                     },
                     bottom: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
+                    open: {
                         type: Boolean,
                         value: false,
                         notify: true,

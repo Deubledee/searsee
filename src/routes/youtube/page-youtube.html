@@ -12,18 +12,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <custom-style>
       <style>
         :host {
-          --app-primary-color: rgb(207, 29, 23);
-          --app-secondary-color: black;
+          --app-primary-color: rgb(143, 99, 37);
+          --app-secondary-color: #65451a;
           --app-third-color: rgb(66, 133, 244);
           display: block;
-        }
-
-        body {
-          background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+          overflow-x: hidden
         }
 
         app-drawer-layout:not([narrow]) [drawer-toggle] {
           display: none;
+        }
+
+        app-drawer-layout {
+          position: static;
         }
 
         iron-pages {
@@ -52,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         app-drawer {
-          z-index: 1;
+          z-index: 2;
           --app-drawer-content-container: {
             background-color: #adc2d28c;
           }
@@ -66,8 +67,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           display: block;
           padding: 0 16px;
           text-decoration: none;
-          color: var(--app-secondary-color);
+          color: var(--app-primary-color);
           line-height: 40px;
+        }
+
+        .drawer-list a.iron-selected {
+          color: var(--app-secondary-color);
+          font-weight: bold;
         }
 
         .drawer-list a.iron-selected {
@@ -120,95 +126,108 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
           }
+        }
 
-          :host([video-page-active]) {
-            overflow: hidden;
-          }
+        app-toolbar.tall[open] {
+          background: rgba(68, 146, 144, 0.39);
+          position: fixed;
+          right: 5%;
+          top: 38px;
+          width: 62%;
+          transition: height 300ms ease-in-out;
+          height: 93px;
+          z-index: 2;
+        }
+        .val {
+          background: transparent
+          border-radius: 6px;
+          padding: 6px;
+          margin-left: 15px;
+          width: 100%;
+        }
 
-          :host([video-page-active]) iron-pages {
-            transform: translateY(-170px);
-          }
+        .fullBackground {
+          width: 0%;
+          height: 0px;
+          transition: height 300ms ease-in-out;
+        }
 
-          app-toolbar.tall {
-            top: 0px;
-            height: 0px;
-            z-index: 0;
-          }
+        .fullBackground[open] {
+          position: fixed;
+          top: 30px;
+          width: 100%;
+          height: -webkit-fill-available;
+          background: rgba(4, 5, 0, 0.5294117647058824);
+          transition: height 300ms ease-in-out;
+          z-index: 2;
+        }
 
+        @media (max-width: 1180px) {
           app-toolbar.tall[open] {
-            background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
-            position: fixed;
-            right: 8%;
-            top: 38px;
-            width: 62%;
-            transition: height 0.5s ease-in;
-            height: 93px;
-            z-index: 2;
-            ;
+            width: 58%;
           }
+        }
 
-          @media (max-width: 1080px) {
-            app-toolbar.tall[open] {
-              top: 35px;
-              width: 58%;
-            }
+        @media (max-width: 900px) {
+          app-toolbar.tall[open] {
+            width: 53%;
           }
+        }
 
-          @media (max-width: 920px) {
-            app-toolbar.tall[open] {
-              top: 35px;
-              width: 53%;
-            }
+        @media (max-width: 800px) {
+          app-toolbar.tall[open] {
+            width: 48%;
           }
+        }
 
-          @media (max-width: 820px) {
-            app-toolbar.tall[open] {
-              top: 35px;
-              width: 48%;
-            }
+        @media (max-width: 700px) {
+          app-toolbar.tall[open] {
+            width: 45%;
           }
+        }
 
-          @media (max-width: 700px) {
-            app-toolbar.tall[open] {
-              top: 35px;
-              width: 42%;
-            }
+        @media (max-width: 640px) {
+          app-toolbar.tall[open] {
+            width: 82%;
           }
-
-          @media (max-width: 700px) {
-            app-toolbar.tall[open] {
-              top: 35px;
-              width: 42%;
-            }
-          }
-
-          @media (max-width: 640px) {
-            app-toolbar.tall[open] {
-              top: 35px;
-              width: 82%;
-            }
-            app-toolbar.tall a {
-              width: 100%;
-            }
-          }
-
-          app-drawer-layout {
-            position: static;
-          }
-
-          paper-input {
-            color: var(--paper-red-300);
-            --paper-input-container-input-color: #00e7ff
-          }
-
-          #val {
-            background: linear-gradient(to right, rgba(70, 68, 70, 0) 0%, #070401 5%,
-            #464446 50%, #040500 95%, rgba(70, 68, 70, 0) 100%);
-            border-radius: 6px;
-            padding: 6px;
-            margin-left: 15px;
+          app-toolbar.tall a {
             width: 100%;
           }
+        }
+
+        :host([video-page-active]) {
+          overflow: hidden;
+        }
+
+        :host([video-page-active]) iron-pages {
+          transform: translateY(-170px);
+        }
+
+        paper-input {
+          color: var(--paper-red-300);
+          --paper-input-container-input-color: #78b2df;; 
+          --paper-input-container-color:rgb(255, 255, 255);
+--paper-input-container-focus-color:#00e7ff;
+--paper-input-container-invalid-color:grey;
+--paper-input-container:yellow;
+--paper-input-container-label:brown;
+--paper-input-container-label-focus:chocolate;
+--paper-input-container-label-floating:orange;
+--paper-input-container-input:blue;/*
+--paper-input-container-input-disabled:;
+--paper-input-container-input-focus:;
+--paper-input-container-input-invalid:;
+--paper-input-container-input-webkit-spinner:;
+--paper-input-container-input-webkit-clear:;
+--paper-input-container-ms-clear:;
+--paper-input-container-underline:;
+--paper-input-container-underline-focus:;
+--paper-input-container-underline-disabled:;
+--paper-input-prefix:;
+--paper-input-suffix:;*/
+        }
+
+        
       </style>
     </custom-style>
 
@@ -222,38 +241,45 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <!--app-route /videos/-->
     <app-route route="{{route}}" pattern="/videos/:vid" data="{{videoRouteData}}" tail="{{videoTail}}" query-params="{{VideoQuery}}">
     </app-route>
-    <app-toolbar title class="tall" open$="[[open]]">
-      <paper-input always-float-label id="val" label="Youtube Search" value="{{inputDelay}}" on-click="clear"></paper-input>
-    </app-toolbar>
+    <div class="fullBackground" open$="[[open]]">
+      <app-toolbar title class="tall" open$="[[open]]">
+
+        <paper-input autofocus="true" always-float-label id="val" label="Youtube Search" class="val" open$="[[open]]" value="{{inputDelay}}" on-click=""></paper-input>
+      </app-toolbar>
+    </div>
     <app-drawer-layout id="layout">
       <app-drawer id="drawer" opened="{{drtgl}}" slot="drawer">
         <!--google-signin class="right" brand="google" client-id="637872775110-m6bs42r7jrr0kuq4vkpqig7qf60dgpl0.apps.googleusercontent.com">
                 <b hidden id="not-signed-in">Not signed in!</b>
               </google-signin-->
-
-
-
         <youtube-toolbar>
           <img slot="logo" src="https://raw.githubusercontent.com/Deubledee/searsee.github.io/master/images/youtubes-logo-text.png">
           <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
         </youtube-toolbar>
-
-
-
-
-        <validate-input label="Search pages" value="{{routeTail.path}}">
-        </validate-input>
+        <paper-button>
+          <validate-input label="Search pages" value="{{routeTail.path}}">
+          </validate-input>
+        </paper-button>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="search" href="/youtube/search/list?api=search&q={{inputCache}}" on-click="_drToggle">search</a>
-          <a name="channel" href="/youtube/channel/" on-click="_drToggle">channel</a>
-          <a name="profile" href="/youtube/profile/" on-click="_drToggle">profile</a>
+          <a name="search" href="/youtube/search/list?api=search&q={{inputCache}}" on-click="_drToggle">
+            <paper-button>
+              search
+              <paper-icon-button icon="search"></paper-icon-button>
+            </paper-button>
+          </a>
+          <paper-button>
+            <a name="channel" href="/youtube/channel/" on-click="_drToggle">channel</a>
+          </paper-button>
+          <paper-button>
+            <a name="profile" href="/youtube/profile/" on-click="_drToggle">profile</a>
+          </paper-button>
         </iron-selector>
       </app-drawer>
 
       <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
         <page-video name="video" id="video" route="{{route}}" items="{{videos}}" resize="[[resize]]" active="{{pageActive}}">
         </page-video>
-        <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}" input-cache="{{inputCache}}" open="{{srtgl}}">
+        <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}" input-cache="{{inputCache}}" open="{{open}}">
         </page-search>
         <page-view404 name="view404"></page-view404>
       </iron-pages>
@@ -388,6 +414,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: false,
             notify: true,
             reflectToAttribute: true,
+            observer: 'log'
           },
           resize: {
             type: Boolean,
@@ -455,9 +482,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this._drToggle("layout", e.detail)
         }).bind(this))
       }
+      log(data) {
+        console.log("data search", data)
+      }
+
       _drToggle(data, detail) {
         if (this.pageActive === true && window.innerWidth <= 640 && data !== "layout") {
-          this.drtgl = !this.drtgl
+          setTimeout(() => {
+            this.drtgl = !this.drtgl
+          }, 300)
         }
         if (data === "layout") {
           if (detail === 90) {
@@ -470,19 +503,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             window.scrollTo({}, 52)
           } else {
             setTimeout(() => {
-              if (window.innerWidth <= 640) {
-                console.log(window.innerWidth)
-              } else {
+              if (window.innerWidth > 640) {
                 this.$.layout.$.contentContainer.style.marginLeft = "var(--app-drawer-width, 256px)"
+
               }
-            }, 100)
+              if (window.innerHeight >= 992) {
+                this.$.drawer.open()
+                console.log("i did it", window.innerWidth)
+              }
+            }, 1000)
           }
         }
-      }
-      _srToggle(data) {
-        console.log('pageActive', this.pageActive)
-        if (this.pageActive === true)
-          this.srtgl = !this.srtgl
       }
       _inputer(char, clear) {
         if (this.timouter > 0)

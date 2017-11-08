@@ -269,14 +269,18 @@
           }
           window.screen.orientation.onchange = event => {
             let page = this.subroute.path
-            if (window.screen.orientation.angle === 90 && window.innerWidth <= 640) {
-              if (page.match(/video/))
-                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))
-              console.log(window.screen.orientation.angle)
+            if (window.screen.orientation.angle === 90) {
+              if (page.match(/video/)) {
+                document.body.style.background = "linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%)"
+                this.$.toolbarAll.style.display = "none"
+                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))                
+              }
             } else {
-              if (page.match(/video/))
-                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))
-              console.log(window.screen.orientation.angle)
+              if (page.match(/video/)) {
+                this.$.toolbarAll.style.display = "block"
+                document.body.style.background = "#ffffff"
+                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))                
+              }
             }
           }
         }
