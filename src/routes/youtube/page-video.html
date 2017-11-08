@@ -136,7 +136,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-top: -1px;
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
       }
-
+      .navbar-expand-lg {
+        overflow: hidden;
+      }
       @media (max-width: 640px) {
         .navbar {
           top: 39px;
@@ -201,7 +203,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties into the queryParams object. youtube-lite doesn't have any code
     that's even aware of routing or the URL. -->
 
-    <nav class="navbar navbar-expand-lg ">
+    <nav id="navYt" class="navbar navbar-expand-lg">
       <youtube-lite class="player" default$="[[default]]" id="player" video-id="{{videData.page}}" state="{{queryParams.state}}"
         current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
       </youtube-lite>
@@ -251,7 +253,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </search-results>
       </div>
     </div>
-    <nav class="navbar-bottom">
+    <nav id="bottom" class="navbar-bottom">
       <span></span>
     </nav>
     <youtube-search search="{{videData.page}}" api="[[Details]]" class="search" hide="true" video-data="{{timeData}}">
@@ -385,11 +387,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.default = false
           this.$.heg.style.display = "none"
           this.$.results.style.display = "none"
-          this.$.player.style.display = "none"          
+          this.$.player.style.display = "none"   
+          this.$.bottom.style.display = "none"       
           this.$.player.style.marginBottom = "83px"
           setTimeout(() => {            
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
+            this.style.position = "fixed"
+            this.$.navYt.style.overflowX = "hidden"
             this.$.player.style.marginBottom = "83px"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
             this.$.player.style.height = (window.screen.height - 60) + "px"
@@ -401,10 +406,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.default = true
           this.lock = false
           window.document.body.style.overflowY = "auto"
-          setTimeout(() => {
+          this.style.position = "relative"
+          setTimeout(() => {            
             this.$.player.style.marginBottom = "0px"
             this.$.heg.style.display = "block"
             this.$.results.style.display = "block"
+            this.$.bottom.style.display = "block"
           }, 500)
         }
       }
