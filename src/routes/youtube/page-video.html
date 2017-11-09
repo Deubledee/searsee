@@ -29,6 +29,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       paper-input {
         margin-left: -10%;
         width: 74px;
+        margin-top: 23px;
       }
 
       paper-toggle-button {
@@ -142,7 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       @media (max-width: 640px) {
         .navbar {
           top: 24px;
-          margin-bottom: 35px;
+          padding-top: 25px;
         }
       }
 
@@ -210,7 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </nav>
     <div id="heg" class="slider" wide$="[[wide]]">
       <div id="controls" class="nav">
-        <div class="nav-item">
+        <div class="nav-item ">
           <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
             on-down="pause" on-up="play"></time-input>
         </div>
@@ -390,6 +391,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.player.style.display = "none"   
           this.$.bottom.style.display = "none"       
           this.$.player.style.marginBottom = "83px"
+          this.$.navYt.style.paddingTop = "0px"
           setTimeout(() => {            
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
@@ -407,12 +409,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.lock = false
           window.document.body.style.overflowY = "auto"
           this.style.position = "relative"
+          this.$.navYt.style.paddingTop = "25px"
           setTimeout(() => {            
             this.$.player.style.marginBottom = "0px"
             this.$.heg.style.display = "block"
             this.$.results.style.display = "block"
             this.$.bottom.style.display = "block"
-          }, 500)
+          }, 500) 
         }
       }
       _toSeconds(obj) {
