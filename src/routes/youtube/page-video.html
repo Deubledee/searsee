@@ -116,7 +116,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .navbar-bottom {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
         height: auto;
-        min-height: 24px
+        min-height: 28px
       }
 
       youtube-lite.player[default] {
@@ -402,7 +402,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.$.player.style.height = (window.screen.height - 60) + "px"
             this.$.player.style.marginTop = window.innerWidth > 640 ? "29px": "-17px"
             this.$.player.style.display = "block"
-          },750)
+          },1000)
         }
         if (detail === 0 && this.lock !== false) {
           this.default = true

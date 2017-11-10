@@ -271,15 +271,13 @@
             let page = this.subroute.path
             if (window.screen.orientation.angle === 90) {
               if (page.match(/video/)) {
-                document.body.style.background = "linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%)"
                 this.$.toolbarAll.style.display = "none"
-                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))                
+                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))
               }
             } else {
               if (page.match(/video/)) {
                 this.$.toolbarAll.style.display = "block"
-                document.body.style.background = "#ffffff"
-                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))                
+                window.dispatchEvent(new CustomEvent("orientation-change", { detail: window.screen.orientation.angle }))
               }
             }
           }
@@ -298,6 +296,8 @@
         if (page.match(/video/)) {
           this.set('resise', true)
           this.set('resise', false)
+        } else {
+          document.body.style.background = "#ffffff"
         }
         if (window.innerWidth <= 640) {
           this.$.pageButton.hidden = false
@@ -341,6 +341,12 @@
         }
         loadPage = this.subroute.prefix.split("/")[1] || "home"
         this.page = loadPage //|| Polymer.path.
+        console.log(this.page)
+        if(this.page === "youtube"){
+          document.body.style.background = "linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%)"
+        } else {
+          document.body.style.background = "#ffffff"
+        }
         this._resize()
       }
       _pageChanged(page) {
