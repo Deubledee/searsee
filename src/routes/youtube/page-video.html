@@ -111,6 +111,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       .navbar {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+        top: 0px;
+        padding-top: 32px;
       }
 
       .navbar-bottom {
@@ -137,16 +139,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-top: -1px;
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
       }
+
       .navbar-expand-lg {
         overflow: hidden;
       }
-      @media (max-width: 640px) {
-        .navbar {
-          top: 24px;
-          padding-top: 25px;
-        }
-      }
-
+      
       @media (min-width: 992px) {
         .navbar-expand-lg {
           top: -24px
@@ -249,7 +246,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     <div class="row" id="res">
       <div class="coll-xs-12 mie" id="results">
-        <paper-icon-button  icon="menu" on-click="_drToggle"></paper-icon-button>
+        <paper-icon-button icon="menu" on-click="_drToggle"></paper-icon-button>
         <search-results id="results" class="width" mini="true" bottom="[[bottom]]" route="{{route}}" items="{{items}}">
         </search-results>
       </div>
@@ -388,11 +385,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.default = false
           this.$.heg.style.display = "none"
           this.$.results.style.display = "none"
-          this.$.player.style.display = "none"   
-          this.$.bottom.style.display = "none"       
+          this.$.player.style.display = "none"
+          this.$.bottom.style.display = "none"
           this.$.player.style.marginBottom = "83px"
           this.$.navYt.style.paddingTop = "0px"
-          setTimeout(() => {            
+          setTimeout(() => {
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
             this.style.position = "fixed"
@@ -400,9 +397,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             this.$.player.style.marginBottom = "83px"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
             this.$.player.style.height = (window.screen.height - 60) + "px"
-            this.$.player.style.marginTop = window.innerWidth > 640 ? "29px": "-17px"
+            this.$.player.style.marginTop = window.innerWidth > 640 ? "29px" : "-17px"
             this.$.player.style.display = "block"
-          },1000)
+          }, 1000)
         }
         if (detail === 0 && this.lock !== false) {
           this.default = true
@@ -410,12 +407,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           window.document.body.style.overflowY = "auto"
           this.style.position = "relative"
           this.$.navYt.style.paddingTop = "25px"
-          setTimeout(() => {            
+          setTimeout(() => {
             this.$.player.style.marginBottom = "0px"
             this.$.heg.style.display = "block"
             this.$.results.style.display = "block"
             this.$.bottom.style.display = "block"
-          }, 500) 
+          }, 500)
         }
       }
       _toSeconds(obj) {
