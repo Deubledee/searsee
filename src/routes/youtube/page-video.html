@@ -112,7 +112,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .navbar {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
         top: 0px;
-        padding-top: 32px;
+        padding-top: 32px!important;
       }
 
       .navbar-bottom {
@@ -143,7 +143,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .navbar-expand-lg {
         overflow: hidden;
       }
-      
+
+      @media (max-width: 640px) {
+        .navbar {
+          top: 0px;
+          padding-top: 32px;
+        }
+      }
+
       @media (min-width: 992px) {
         .navbar-expand-lg {
           top: -24px
