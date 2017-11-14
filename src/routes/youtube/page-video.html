@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="components/time-input.html">
 <link rel="import" href="../../styles/shared-styles-nav.html">
 <link rel="import" href="components/search-results.html">
+<link rel="import" href="components/play-button.html">
 <dom-module id="page-video">
   <template>
     <style include="shared-styles-nav">
@@ -51,8 +52,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .z2 {
         position: relative;
         z-index: 2;
-        margin-right: 20px;
-        top: 21px;
+        margin-right: -5px;
       }
 
       .search {
@@ -74,45 +74,44 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .value {
-        margin-top: 5px;
-        margin-left: 7px;
-        padding-left: 9px;
-        margin-right: 2px;
-        /* border: 1px solid; */
-        box-shadow: 2px 3px 9px #6378c59c;
+        margin-left: 25%;
+        margin-right: 19px;
+        visibility: hidden;
+        /* padding-right: 6px; */
       }
 
       .value2 {
-        margin-top: 5px;
-        margin-left: -3px;
-        margin-right: 2px;
-        padding-left: 6px;
-        /* border: 1px solid; */
-        box-shadow: 2px 3px 9px #6378c59c;
+        /* margin-top: 5px; */
+        margin-left: 18px;
+        visibility: hidden;
+        /* margin-right: 2px; */
+        padding-left: 4px;
+        /* box-shadow: 2px 3px 9px #6378c59c; */
       }
 
       .navi {
-        position: relative;
-        /* float: right; */
-        left: 20px;
+        display: -webkit-box;
       }
 
       .navtem {
-        padding: 1px;
+        padding: 2px;
         margin-left: 8px;
-        color: darkgrey;
+        color: #5e8aab;
         font-weight: bold;
       }
 
       paper-icon-button {
         position: relative;
         color: #bd8130;
+        top: -7px;
+        left: 10px;
       }
 
       .navbar {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
         top: 0px;
-        padding-top: 32px!important;
+        padding-top: 32px;
+        overflow-x: "hidden"
       }
 
       .navbar-bottom {
@@ -124,7 +123,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       youtube-lite.player[default] {
         width: 100% !important;
         height: 43vh !important;
-        top: 3px !important;
       }
 
       youtube-lite.player[wide] {
@@ -144,12 +142,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         overflow: hidden;
       }
 
-      @media (max-width: 640px) {
-        .navbar {
-          top: 0px;
-          padding-top: 32px;
-        }
-      }
+      @media (max-width: 640px) {}
 
       @media (min-width: 992px) {
         .navbar-expand-lg {
@@ -192,6 +185,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin-bottom: 117px;
         left: 2px;
       }
+
+      .topy {
+        padding-top: 12px;
+        height: 30px;
+      }
+
+      .state {
+        visibility: hidden
+      }
     </style>
 
     <!-- This app-route consumes the route which was provided by the tail of
@@ -214,40 +216,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </youtube-lite>
     </nav>
     <div id="heg" class="slider" wide$="[[wide]]">
-      <div id="controls" class="nav">
-        <div class="nav-item ">
-          <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
-            on-down="pause" on-up="play"></time-input>
-        </div>
-      </div>
       <nav class="navi nav" id="nav">
         <div class="nav-item navtem">
           <p>
-            <div class="type">Time Elapsed</div>
-            <div class="value"> {{transformedTime}} </div>
-            <h4></h4>
+            <div id="valu" class="value"> {{transformedTime}} </div>
           </p>
         </div>
         <div class="nav-item navtem">
           <span>
             <p></p>
           </span>
+        </div>
+        <div class="nav-item navtem topy">
+          <play-button class="state" id="state" active="{{playing}}">
+          </play-button>
         </div>
         <div class="nav-item navtem">
           <p>
-            <div class="type">duration</div>
-            <div class="value2"> {{fulTime}}</div>
+            <!--div class="type">duration</div-->
+            <div id="valu2" class="value2"> {{fulTime}}</div>
           </p>
         </div>
-        <div class="nav-item navtem">
-          <span>
-            <p></p>
-          </span>
-        </div>
-        <div class="nav-item navtem">
-          <paper-toggle-button id="state" active="{{playing}}">
-            [[queryParams.state]]
-          </paper-toggle-button>
+      </nav>
+      <nav id="controls" class="nav">
+        <div class="nav-item ">
+          <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
+            on-down="pause" on-up="play"></time-input>
         </div>
       </nav>
     </div>
@@ -286,7 +280,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             obsever: 'setTime'
           },
           playing: {
-            type: Boolean
+            type: Boolean,
+            notify: true,
+            observer: '_playingChanged'
           },
           transformedTime: {
             type: String,
@@ -368,6 +364,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.addEventListener("orientation-change", (function (e) {
           this.orient("layout", e.detail)
         }).bind(this))
+        setTimeout(() => {
+          var magic
+          if (window.innerWidth <= 400) {
+            magic = 5
+            if (window.innerWidth <= 320) {
+              magic = 5.5
+            }
+          } else {
+            magic = 4
+          }
+          this.$.state.style.visibility = "visible"
+          this.$.valu.style.visibility = "visible"
+          this.$.valu2.style.visibility = "visible"
+          this.$.valu.style.marginRight = magic = Math.floor( (window.innerWidth / magic) -5 ) + "px"
+          this.$.valu.style.transition = "margin-right 0.5s ease-in-out"
+          this.$.valu2.style.marginLeft = Math.floor(window.innerWidth / 7) + "px"
+          this.$.valu2.style.transition = "margin-right 0.5s ease-in-out"
+        }, 750)
       }
       static get observers() {
         return [
@@ -382,11 +396,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         window.scrollTo({}, 0)
 
       }
+
       _drToggle() {
         this.bottom = !this.bottom
       }
+
       orient(data, detail) {
-        let margin
         if (detail === 90 && this.lock !== true) {
           this.lock = true
           this.default = false
@@ -395,16 +410,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.$.player.style.display = "none"
           this.$.bottom.style.display = "none"
           this.$.player.style.marginBottom = "83px"
-          this.$.navYt.style.paddingTop = "0px"
           setTimeout(() => {
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
             this.style.position = "fixed"
-            this.$.navYt.style.overflowX = "hidden"
             this.$.player.style.marginBottom = "83px"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
             this.$.player.style.height = (window.screen.height - 60) + "px"
-            this.$.player.style.marginTop = window.innerWidth > 640 ? "29px" : "-17px"
             this.$.player.style.display = "block"
           }, 1000)
         }
@@ -413,7 +425,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.lock = false
           window.document.body.style.overflowY = "auto"
           this.style.position = "relative"
-          this.$.navYt.style.paddingTop = "25px"
           setTimeout(() => {
             this.$.player.style.marginBottom = "0px"
             this.$.heg.style.display = "block"
@@ -422,87 +433,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           }, 500)
         }
       }
-      _toSeconds(obj) {
-        if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
-          let time, mTime, sTime, hTime, seconds
-          if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
-            time = obj.items[0].contentDetails.duration.split("H")
-            hTime = time[0].split("PT")[1]
-            mTime = time[1].split("M")[0]
-            sTime = time[1].split("M")[1].split("S").join()
-            hTime = parseInt(hTime)
-            mTime = parseInt(mTime)
-            sTime = parseInt(sTime)
-            hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
-            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
-            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
-            time = hTime + ":" + mTime + ":" + sTime
-            seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
-          } else {
-            time = obj.items[0].contentDetails.duration.split("M")
-            mTime = time[0].split("PT")[1]
-            sTime = time[1].split("S")[0]
-            mTime = parseInt(mTime)
-            sTime = parseInt(sTime)
-            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
-            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
-            time = mTime + ":" + sTime
-            seconds = (parseInt(mTime) * 60) + parseInt(sTime)
-          }
-          this.set("time", seconds.toString())
-          this.set("fulTime", time.toString())
-        }
-      }
 
-      _time(data) {
-        if (data.hasOwnProperty("state") === false) {
-          this.transformedTime = `00:00:00`
-          this.$.fds.query = "0"
-          console.log("doing my job..!!??", data.hasOwnProperty("state"), this.transformedTime)
-        }
-        if (data.state === 'playing') {
-          this.set("seconds", (data.time % 60) < 10 ? `0${(data.time % 60)}` : `${(data.time % 60)}`)
-          this.set("transformedTime", `${this.hours}:${this.minutes}:${this.seconds}`)
-          if ((parseInt(data.time) % 60) === 0) {
-            this.getTime(data)
-          }
-        }
-      }
-
-      getTime(data) {
-        if (data.hasOwnProperty("time") === true) {
-          var realTime = (data.time / 60),
-            toDec = realTime.toString().split("."),
-            mins, hours;
-          if (data.time >= 3600) {
-            realTime = parseFloat(toDec[0]) / 60
-            if (realTime % 60 > 0) {
-              hours = parseFloat((data.time / 3600)).toString().split(".")[0]
-              mins = toDec[0] % 60
-            }
-            if (realTime % 60 === 0) {
-              hours = parseInt(this.hours.value) + 1
-              mins = toDec[0] % 60
-            }
-          } else {
-            mins = toDec[0] % 60
-            hours = "0"
-          }
-          mins = mins < 10 ? `0${mins}` : `${mins}`
-          this.set("minutes", mins)
-          hours = hours < 10 ? `0${hours}` : `${hours}`
-          this.set("hours", hours)
-        }
-      }
 
       pause() {
         this.set('queryParams.state', 'paused');
-      }
-
-      setTime(time) {
-        getTime({
-          time: time
-        })
       }
 
       play() {
@@ -510,12 +444,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.set('queryParams.state', 'playing');
 
         }, 200)
-
       }
 
       _playingChanged(playing) {
         this.set('queryParams.state', playing ? 'playing' : 'paused');
         if (this.queryParams.state === "playing") {
+          // this.playing = true
           setTimeout(() => {
             this.orient("orient", window.screen.orientation.angle)
             this.$.player.$.player.play()
@@ -555,6 +489,84 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return;
         }
       }
+
+      setTime(time) {
+        getTime({
+          time: time
+        })
+      }
+      _toSeconds(obj) {
+        if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
+          let time, mTime, sTime, hTime, seconds
+          if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
+            time = obj.items[0].contentDetails.duration.split("H")
+            hTime = time[0].split("PT")[1]
+            mTime = time[1].split("M")[0]
+            sTime = time[1].split("M")[1].split("S").join()
+            hTime = parseInt(hTime)
+            mTime = parseInt(mTime)
+            sTime = parseInt(sTime)
+            hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
+            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+            time = hTime + ":" + mTime + ":" + sTime
+            seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
+          } else {
+            time = obj.items[0].contentDetails.duration.split("M")
+            mTime = time[0].split("PT")[1]
+            sTime = time[1].split("S")[0]
+            mTime = parseInt(mTime)
+            sTime = parseInt(sTime)
+            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+            time = mTime + ":" + sTime
+            seconds = (parseInt(mTime) * 60) + parseInt(sTime)
+          }
+          this.set("time", seconds.toString())
+          this.set("fulTime", time.toString())
+        }
+      }
+
+      _time(data) {
+        if (data.hasOwnProperty("state") === false) {
+          this.transformedTime = `00:00:00`
+          this.$.fds.query = "0"
+        }
+        if (data.state === 'playing') {
+          this.set("seconds", (data.time % 60) < 10 ? `0${(data.time % 60)}` : `${(data.time % 60)}`)
+          this.set("transformedTime", `${this.hours}:${this.minutes}:${this.seconds}`)
+          if ((parseInt(data.time) % 60) === 0) {
+            this.getTime(data)
+          }
+        }
+      }
+
+      getTime(data) {
+        if (data.hasOwnProperty("time") === true) {
+          var realTime = (data.time / 60),
+            toDec = realTime.toString().split("."),
+            mins, hours;
+          if (data.time >= 3600) {
+            realTime = parseFloat(toDec[0]) / 60
+            if (realTime % 60 > 0) {
+              hours = parseFloat((data.time / 3600)).toString().split(".")[0]
+              mins = toDec[0] % 60
+            }
+            if (realTime % 60 === 0) {
+              hours = parseInt(this.hours.value) + 1
+              mins = toDec[0] % 60
+            }
+          } else {
+            mins = toDec[0] % 60
+            hours = "0"
+          }
+          mins = mins < 10 ? `0${mins}` : `${mins}`
+          this.set("minutes", mins)
+          hours = hours < 10 ? `0${hours}` : `${hours}`
+          this.set("hours", hours)
+        }
+      }
+
     }
     window.customElements.define(pageVideo.is, pageVideo);
   </script>

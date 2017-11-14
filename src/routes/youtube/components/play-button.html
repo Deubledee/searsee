@@ -1,0 +1,110 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+<link rel="import" href="../../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../../../../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../../../../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="youtube-search.html">
+<dom-module id="play-button">
+    <template>
+        <style>
+            :host {
+                width: 100%;
+                --app-primary-color: rgb(207, 29, 23);
+                --app-secondary-color: black;
+                --app-third-color: rgb(66, 133, 244);
+            }
+
+            .content {
+                height: 30px;
+                width: 30px;
+                /* background-color: var(--app-play-color)*/
+            }
+
+            .pause[pause] {
+                background: linear-gradient(to right, #5e8aab 0%,#070401 89%);
+                float: left;
+                width: 50%;
+                height: 30px;
+                transition: height 0.5s ease-in-out;
+            }
+            .pauseB[pause] {
+                background: linear-gradient(to right, #75a58f 0%,#070401 89%);
+                float: left;
+                width: 50%;
+                height: 30px;
+                transition: height 0.5s ease-in-out;
+            }
+
+            .playing[playing] {
+                background: linear-gradient(to bottom left, transparent 49%,#2b2626 51%, #5e8aab 87%);
+                float: left;
+                width: 100%;
+                height: 15px;
+                transition: width 0.5s ease-in-out;
+            }
+
+            .playingB[playing] {
+                background: linear-gradient(to top left, transparent 49%,#131213 51%, #75a58f 87%);
+                float: left;
+                width: 100%;
+                height: 15px;
+                transition: width 0.5s ease-in-out;
+            }
+        </style>
+        <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
+        </app-route>
+        <div id="content" class="content" mini$="[[mini]]" on-click="_playing">
+            <div id="up" class="playing pause" playing$="{{playing}}" pause$="{{pause}}"></div>
+            <div id="down" class="playingB pauseB" playing$="{{playing}}" pause$="{{pause}}"></div>
+        </div>
+    </template>
+    <script>
+        class playButton extends Polymer.Element {
+            static get is() {
+                return 'play-button';
+            }
+            constructor() {
+                super();
+            }
+            ready() {
+                super.ready()
+
+            }
+            static get properties() {
+                return {
+                    active: {
+                        type: Boolean,
+                        notify: true,
+                        observer: '_check'
+                    },
+                    playing: {
+                        type: Boolean,
+                        value: false,
+                        reflectToAttribute: true
+                    },
+                    pause: {
+                        type: Boolean,
+                        value: true,
+                        reflectToAttribute: true
+                    }
+                }
+            }
+            _check(){
+                this.playing = !this.playing
+                this.pause = !this.pause
+            }
+            _playing() {                
+                this.active = !this.active
+            }
+        }
+        window.customElements.define(playButton.is, playButton);
+    </script>
+</dom-module>

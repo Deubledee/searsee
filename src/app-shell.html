@@ -340,8 +340,7 @@
           return
         }
         loadPage = this.subroute.prefix.split("/")[1] || "home"
-        this.page = loadPage //|| Polymer.path.
-        console.log(this.page)
+        this.page = loadPage //|| Polymer.path.        
         if(this.page === "youtube"){
           document.body.style.background = "linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%)"
         } else {
@@ -350,7 +349,6 @@
         this._resize()
       }
       _pageChanged(page) {
-        console.log(page)
         var resolvedPageUrl
         resolvedPageUrl = page === "login" || page === "home" || page === "view404" ? this.resolveUrl('routes/page-' + page + '.html') :
           this.resolveUrl('routes/' + page + '/page-' + page + '.html')
