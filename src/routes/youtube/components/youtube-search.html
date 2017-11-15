@@ -137,7 +137,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      queryon(data) {        
+      queryon(data) {
         if (this.api.method.length > 0) {
           let method, query;
           method = "_" + this.api.method
@@ -149,16 +149,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       query(data) {
         let method, query;
-        if (!data.api) {
-          data = { api: "search" }
-          method = "_" + "list"
-          query = ""
-        } else {
-          method = "_" + this.searchData.page,
+        if (this.route) {
+          if (!data.api && this.route.prefix === "/youtube/search") {
+            data = { api: "search" }
+            method = "_" + "list"
+            query = ""
+          } else if (this.route.prefix === "/youtube/search") {
+            method = "_" + this.searchData.page
             query = data.q
+          }
+          if (this.route.prefix === "/youtube/search") {
+            this.set("url", `https://www.googleapis.com/youtube/v3/${data.api}/`)
+            this.params = this[method](query)
+          }
         }
-        this.set("url", `https://www.googleapis.com/youtube/v3/${data.api}/`)
-        this.params = this[method](query)
       }
       _channel(data) {
         return {

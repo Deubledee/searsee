@@ -287,11 +287,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           transformedTime: {
             type: String,
             notify: true
-          },
+          },          
           items: {
             type: Array,
             notify: true,
-            obsever: '_seethisshit'
+            observer: 'log'
           },
           videoPageActive: {
             type: Boolean,
@@ -304,6 +304,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           resize: {
             type: Boolean,
             notify: true,
+          },
+          change: {
+            type: Boolean,
+            notify: true,
+            observer: 'setItems'
           },
           hours: {
             type: String,
@@ -336,7 +341,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: true,
             notify: true,
             reflectToAttribute: true
-          },
+          },          
           wideo: {
             type: Boolean,
             value: false,
@@ -347,6 +352,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             value: false
           },
+          items:{
+            type: Array,
+            notify: true,
+            value: window.searches[window.searches.q]
+            },
           Details: {
             type: Object,
             value: function () {
@@ -391,10 +401,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           '_seethisshit()'
         ]
       }
+      log(data){
+        console.log(data)
+      }
+      setItems(){
+        this.items = window.searches[window.searches.q]
+      }
+      _setItems(data) {
+        console.log(data,window.searches[data])
+        this.items =  window.searches[data]
+        console.log(data, this.items)
+      }
 
       _seethisshit() {
         window.scrollTo({}, 0)
-
       }
 
       _drToggle() {
@@ -470,6 +490,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         if (videoPageActive) {
           // black
           //this.style.display = "block"
+          console.log("active")
           newColor = 0;
         } else {
           // white

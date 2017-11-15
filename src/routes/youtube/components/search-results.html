@@ -189,11 +189,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 .content {
                     margin: 36px -1px 0px -3px;
                     margin-top: 36px;
-                    
+
                 }
                 .content[open] {
                     margin-top: 35px;
-                    
+
                 }
                 .content[mini] {
                     width: 99%;
@@ -212,7 +212,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-route>
         <div id="content" class="content" mini$="[[mini]]" bottom$="[[bottom]]" open$="[[open]]">
             <iron-selector selected="[[routeTail.prefix]]" attr-for-selected="name" class="drawer-list" role="navigation">
-                <template is="dom-repeat" items="{{items}}" as="video">
+                <template is="dom-repeat" items="{{items}}" as="video" mutable-data="true">
                     <div class="float" mini$="[[mini]]">
                         <a name="/youtube/search/" id="anav" href="/youtube/video/{{video.id}}" on-click="_seethisshit">
                             <paper-card mini$="[[mini]]" bottom$="[[bottom]]" class="nav" image="{{video.thumbnail}}">
@@ -251,7 +251,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     },
                     items: {
                         type: Array,
-                        obsever: '_seethisshit'
+                        notify: true,
+                        observer: 'fuckedYouUp'
+                    },
+                    change: {
+                        type: Boolean,
+                        value: false,
+                        observer: 'itemsChanged'
                     },
                     mini: {
                         type: Boolean,
@@ -272,6 +278,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         reflectToAttribute: true
                     },
                 }
+            }
+          
+            itemsChanged(data) {                
+                if (data === true) {                    
+                    this.set("items", window.searches[window.searches.q])
+                    console.log("items", this.items)  
+                    this.notifyPath('items')                  
+                    this.change = false                    
+                }                 
+            }
+
+            fuckedYouUp(data){
+                console.log('realy did..!!', data)
             }
             _seethisshit() {
                 window.scrollTo({}, 0)

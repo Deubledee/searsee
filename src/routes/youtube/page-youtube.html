@@ -138,6 +138,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           height: 93px;
           z-index: 2;
         }
+
         .val {
           background: transparent;
           border-radius: 6px;
@@ -205,15 +206,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         paper-input {
           color: var(--paper-red-300);
-          --paper-input-container-input-color: #78b2df;; 
-          --paper-input-container-color:rgb(255, 255, 255);
---paper-input-container-focus-color:#00e7ff;
---paper-input-container-invalid-color:grey;
---paper-input-container:yellow;
---paper-input-container-label:brown;
---paper-input-container-label-focus:chocolate;
---paper-input-container-label-floating:orange;
---paper-input-container-input:blue;/*
+          --paper-input-container-input-color: #78b2df;
+          ;
+          --paper-input-container-color: rgb(255, 255, 255);
+          --paper-input-container-focus-color: #00e7ff;
+          --paper-input-container-invalid-color: grey;
+          --paper-input-container: yellow;
+          --paper-input-container-label: brown;
+          --paper-input-container-label-focus: chocolate;
+          --paper-input-container-label-floating: orange;
+          --paper-input-container-input: blue;
+          /*
 --paper-input-container-input-disabled:;
 --paper-input-container-input-focus:;
 --paper-input-container-input-invalid:;
@@ -226,8 +229,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 --paper-input-prefix:;
 --paper-input-suffix:;*/
         }
-
-        
       </style>
     </custom-style>
 
@@ -244,7 +245,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div class="fullBackground" open$="[[open]]">
       <app-toolbar title class="tall" open$="[[open]]">
 
-        <paper-input autofocus="true" always-float-label id="val" label="Youtube Search" class="val" open$="[[open]]" value="{{inputDelay}}" on-click=""></paper-input>
+        <paper-input autofocus="true" always-float-label id="val" label="Youtube Search" class="val" open$="[[open]]" value="{{inputDelay}}"
+          on-click=""></paper-input>
       </app-toolbar>
     </div>
     <app-drawer-layout id="layout">
@@ -254,7 +256,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </google-signin-->
         <youtube-toolbar>
           <img slot="logo" src="https://raw.githubusercontent.com/Deubledee/searsee.github.io/master/images/youtubes-logo-text.png">
-          <youtube-search route="[[pageTail]]" Label="asd" hide="true" search="[[dataq]]" video-data="{{videoData}}"></youtube-search>
+          <youtube-search route="[[pageTail]]" Label="asd" hide="true" video-data="{{videoData}}"></youtube-search>
         </youtube-toolbar>
         <paper-button>
           <validate-input label="Search pages" value="{{routeTail.path}}">
@@ -277,9 +279,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
-        <page-video name="video" id="video" route="{{route}}" items="{{videos}}" resize="[[resize]]" active="{{pageActive}}">
+        <page-video name="video" id="video" route="{{route}}" change="{{change}}" resize="[[resize]]" active="{{pageActive}}">
         </page-video>
-        <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}" input-cache="{{inputCache}}" open="{{open}}">
+        <page-search name="search" id="search" route="{{routeTail}}" items="{{videos}}" open="{{open}}">
         </page-search>
         <page-view404 name="view404"></page-view404>
       </iron-pages>
@@ -333,6 +335,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           pageActive: {
             type: Boolean,
             reflectToAttribute: true,
+            notify: true
+          },
+          change: {
+            type: Boolean,
             notify: true
           },
           rootPath: {
@@ -396,6 +402,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           inputCache: {
             type: String,
+            value: "",
             notify: true
           },
           opened: {
@@ -458,11 +465,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           inputDelay: {
             type: String,
             observer: '_inputer',
-            notify: true
-          },
-          inputCache: {
-            type: String,
-            value: "",
             notify: true
           },
           timouter: {
@@ -550,6 +552,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
             allVideos.push(youtubeVideo);
           })
+        window.searches[this.inputCache] = allVideos
+        window.searches.q = this.inputCache
         this.set('videos', allVideos);
       }
 
@@ -573,9 +577,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _routePageChanged(page) {
-        // console.log("page.app", page.app)
         this.page = page.app !== "youtube" ? page.app : "search"
-        //console.log("pageData.app", this.pageData.app)       
+        // console.log("pageData.app", this.pageData.app)
+        //console.log("page.app", page.app)
+        if (page.app === 'video') {
+         // console.log("page.app in", page.app)
+          this.change = false
+          this.change = true
+        }
       }
 
       _pageChanged(page) {
@@ -586,7 +595,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           null,
           true);
       }
-
     }
     window.customElements.define(pageYoutube.is, pageYoutube);
   </script>
