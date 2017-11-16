@@ -286,7 +286,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     items: {
                         type: Array,
                         notify: true,
-                        observer: 'fuckedYouUp'
+                        //observer: 'fuckedYouUp'
                     },
                     change: {
                         type: Boolean,
@@ -323,7 +323,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             itemsChanged(data) {
                 if (data === true) {
                     this.set("items", window.searches[window.searches.q])
-                    console.log("items", this.items)
+                   // console.log("items", this.items)
                     this.notifyPath('items')
                     this.change = false
                 }

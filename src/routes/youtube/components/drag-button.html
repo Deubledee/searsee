@@ -23,17 +23,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             }
 
             .content {
+                padding-top: 5px;
                 margin-left: 15px;
                 height: 10px;
                 width: 18px;
                 margin-top: 8px;
                 background: transparent;
-                -webkit-transition: width 0.5s ease-in 0.5s; 
-                -moz-transition: width 0.5s ease-in 0.5s; 
-                transition: width 0.5s ease-in 0.5s
+                -webkit-transition: padding-top 0.5s ease-in 1s, width 0.5s ease-in 0.5s; 
+                -moz-transition: padding-top 0.5s ease-in 1s, width 0.5s ease-in 0.5s;
+                transition: padding-top 0.5s ease-in 1s, width 0.5s ease-in 0.5s;
             }
 
             .content[open] {
+                padding-top: 0px;
                 margin-left: 14px;
                 height: 10px;
                 width: 100%;
