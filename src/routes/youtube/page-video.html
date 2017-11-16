@@ -446,8 +446,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           setTimeout(() => {
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
-            this.style.position = "fixed"
-            this.$.player.style.marginBottom = "83px"
+            this.style.position = "fixed" 
+            this.$.player.style.top = "-10px"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
             this.$.player.style.height = (window.screen.height - 60) + "px"
             this.$.player.style.display = "block"
@@ -462,6 +462,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.style.position = "relative"
           setTimeout(() => {
             this.$.player.style.marginBottom = "0px"
+            this.$.player.style.top = "0px"
             this.$.heg.style.display = "block"
             this.$.bottom.style.display = "block"
           }, 500)
