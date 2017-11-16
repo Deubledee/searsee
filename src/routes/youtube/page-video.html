@@ -15,6 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../../styles/shared-styles-nav.html">
 <link rel="import" href="components/search-results.html">
 <link rel="import" href="components/play-button.html">
+<link rel="import" href="components/drag-button.html">
 <dom-module id="page-video">
   <template>
     <style include="shared-styles-nav">
@@ -24,7 +25,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         --primary-color: var(--paper-red-500);
         --primary-text-color: #fff;
         --paper-toggle-button-unchecked-bar-color: #888;
-        background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+        /* background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);*/
       }
 
       paper-input {
@@ -108,12 +109,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .navbar {
-        background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+        /* background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);*/        
         top: 0px;
         padding-top: 32px;
-        overflow-x: "hidden"
+        padding-left: 19px;
       }
-
+      .navbar[wide] {
+        width: 95%;
+      }
       .navbar-bottom {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
         height: auto;
@@ -125,21 +128,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 43vh !important;
       }
 
-      youtube-lite.player[wide] {
-        width: 92% !important;
-        height: 30%;
-        top: 11%;
-      }
-
-      .mie {
+      .mie[default] {
         margin-left: 15px;
         margin-right: 15px;
         margin-top: -1px;
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
       }
 
+      .mie[wide] {
+        position: fixed;
+        top: -187px;
+        background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
+        -webkit-transition: top 0.5s ease-out;
+        -moz-transition: top 0.5s ease-out;
+        transition: top 0.5s ease-out;
+      }
+
+      .mie[drop] {
+        top: -2px;
+        background: transparent
+      }
+
       .navbar-expand-lg {
         overflow: hidden;
+      }
+
+      .drag {
+        display: none
+      }
+
+      .drag[wide] {
+        display: block
       }
 
       @media (max-width: 640px) {}
@@ -166,26 +185,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       }
 
-      youtube-lite[wide] {
-        height: 254px !important;
-        top: -8px !important;
-        left: 0px!important;
-      }
-
-      youtube-lite[widei] {
-        width: 100% !important;
-        height: 312px !important;
-        top: -18px !important;
-      }
-
-
-      youtube-lite[wideo] {
-        height: 370px;
-        top: 33px;
-        margin-bottom: 117px;
-        left: 2px;
-      }
-
       .topy {
         padding-top: 12px;
         height: 30px;
@@ -210,12 +209,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties into the queryParams object. youtube-lite doesn't have any code
     that's even aware of routing or the URL. -->
 
-    <nav id="navYt" class="navbar navbar-expand-lg">
+    <nav id="navYt" wide$="[[wide]]"class="navbar navbar-expand-lg">
       <youtube-lite class="player" default$="[[default]]" id="player" video-id="{{videData.page}}" state="{{queryParams.state}}"
         current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
       </youtube-lite>
     </nav>
-    <div id="heg" class="slider" wide$="[[wide]]">
+    <div id="heg" class="slider">
       <nav class="navi nav" id="nav">
         <div class="nav-item navtem">
           <p>
@@ -246,10 +245,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </nav>
     </div>
     <div class="row" id="res">
-      <div class="coll-xs-12 mie" id="results">
+      <div class="coll-xs-12 mie" id="results" default$="[[default]]" drop$="[[toggle]]" wide$="[[wide]]">
         <paper-icon-button icon="menu" on-click="_drToggle"></paper-icon-button>
-        <search-results id="results" class="width" mini="true" bottom="[[bottom]]" route="{{route}}" items="{{items}}">
+        <search-results id="results" class="width" mini="true" side-ways="[[sideWays]]" bottom="[[bottom]]" route="{{route}}" items="{{items}}">
         </search-results>
+        <drag-button class="drag" wide$="[[wide]]" toggle="{{toggle}}"> </drag-button>
       </div>
     </div>
     <nav id="bottom" class="navbar-bottom">
@@ -287,7 +287,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           transformedTime: {
             type: String,
             notify: true
-          },          
+          },
           items: {
             type: Array,
             notify: true,
@@ -330,7 +330,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: String,
             notify: true
           },
+          sideWays: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true
+          },
           bottom: {
+            type: Boolean,
+            value: false,
+            notify: true,
+            reflectToAttribute: true
+          },
+          toggle: {
             type: Boolean,
             value: false,
             notify: true,
@@ -341,8 +353,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: true,
             notify: true,
             reflectToAttribute: true
-          },          
-          wideo: {
+          },
+          wide: {
             type: Boolean,
             value: false,
             notify: true,
@@ -352,11 +364,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             type: Boolean,
             value: false
           },
-          items:{
+          items: {
             type: Array,
             notify: true,
             value: window.searches[window.searches.q]
-            },
+          },
           Details: {
             type: Object,
             value: function () {
@@ -384,10 +396,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           } else {
             magic = 4
           }
+          //coloca o time e o play no lugar certo em todas os devices
           this.$.state.style.visibility = "visible"
           this.$.valu.style.visibility = "visible"
           this.$.valu2.style.visibility = "visible"
-          this.$.valu.style.marginRight = magic = Math.floor( (window.innerWidth / magic) -5 ) + "px"
+          this.$.valu.style.marginRight = magic = Math.floor((window.innerWidth / magic) - 5) + "px"
           this.$.valu.style.transition = "margin-right 0.5s ease-in-out"
           this.$.valu2.style.marginLeft = Math.floor(window.innerWidth / 7) + "px"
           this.$.valu2.style.transition = "margin-right 0.5s ease-in-out"
@@ -401,18 +414,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           '_seethisshit()'
         ]
       }
-      log(data){
+      log(data) {
         console.log(data)
       }
-      setItems(){
+      setItems() {
         this.items = window.searches[window.searches.q]
       }
       _setItems(data) {
-        console.log(data,window.searches[data])
-        this.items =  window.searches[data]
-        console.log(data, this.items)
+        this.items = window.searches[data]
       }
-
       _seethisshit() {
         window.scrollTo({}, 0)
       }
@@ -422,11 +432,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       orient(data, detail) {
+        //o lock não é para mexer
+        //garante que tudo corre bem
         if (detail === 90 && this.lock !== true) {
           this.lock = true
           this.default = false
+          this.wide = true
+          this.sideWays = true
           this.$.heg.style.display = "none"
-          this.$.results.style.display = "none"
           this.$.player.style.display = "none"
           this.$.bottom.style.display = "none"
           this.$.player.style.marginBottom = "83px"
@@ -442,13 +455,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
         if (detail === 0 && this.lock !== false) {
           this.default = true
+          this.wide = false
+          this.sideWays = false
           this.lock = false
           window.document.body.style.overflowY = "auto"
           this.style.position = "relative"
           setTimeout(() => {
             this.$.player.style.marginBottom = "0px"
             this.$.heg.style.display = "block"
-            this.$.results.style.display = "block"
             this.$.bottom.style.display = "block"
           }, 500)
         }

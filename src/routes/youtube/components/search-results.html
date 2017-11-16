@@ -47,6 +47,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 background: linear-gradient(to top right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
             }
 
+            .content[sideWays] {
+                margin-top: 35px;
+                height: 98px;
+                padding-left: 7px;                
+            }
+
             .content[mini] {
                 background: linear-gradient(to top left, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
                 top: 0px;
@@ -57,6 +63,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14);
                 overflow-x: hidden;
                 margin-top: -12px;
+                transition: height 0.5s ease-in-out;
             }
 
             #content::-webkit-scrollbar {
@@ -106,6 +113,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 margin-left: 8px;
             }
 
+            .nav[sideWays] {               
+                float: left;
+                margin-bottom: 20px;
+                margin-left: 4%;
+            }
+
             .card-content {
                 width: 98%;
                 text-overflow: ellipsis;
@@ -128,6 +141,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 box-shadow: 3px 4px 5px #646c71;
             }
 
+            .card-content[sideWays] {
+                top: 0px;
+                position: relative;
+            }
+
             .contentView {
                 z-index: 1;
                 font-style: italic;
@@ -143,6 +161,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 position: relative;
                 top: 5px;
                 font-size: 0.6em;
+                transition: font-size 0.5s ease-in-out;
+            }
+
+            .contentView[sideWays] {
+                font-size: 0.9em;
             }
 
             .contentView[bottom] {
@@ -167,11 +190,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 z-index: 1;
                 font-style: italic;
                 flex-grow: 7;
-                font-size: 0.4em;
+                font-size: 0.5em;
                 color: #fbdede;
                 font-weight: bolder;
                 padding-left: 5px;
                 margin-bottom: auto;
+                transition: font-size 0.5s ease-in-out;
+            }
+            .channelView[bottom] {              
+                font-size: 0.6em;              
             }
 
             .channelView a {
@@ -197,7 +224,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
                 .content[mini] {
                     width: 99%;
+                    transition: width 0.5s ease-in-out;
                 }
+
+                .content[sideWays] {
+                    width: 99%;  
+
+                }
+
                 #content::-webkit-scrollbar {
                     display: none
                 }
@@ -210,17 +244,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </style>
         <app-route route="{{route}}" pattern="/:page" data="{{data}}" tail="{{routeTail}}" query-params="{{query}}">
         </app-route>
-        <div id="content" class="content" mini$="[[mini]]" bottom$="[[bottom]]" open$="[[open]]">
+        <div id="content" class="content" mini$="[[mini]]" sideWays$="[[sideWays]]" bottom$="[[bottom]]" open$="[[open]]">
             <iron-selector selected="[[routeTail.prefix]]" attr-for-selected="name" class="drawer-list" role="navigation">
                 <template is="dom-repeat" items="{{items}}" as="video" mutable-data="true">
                     <div class="float" mini$="[[mini]]">
                         <a name="/youtube/search/" id="anav" href="/youtube/video/{{video.id}}" on-click="_seethisshit">
-                            <paper-card mini$="[[mini]]" bottom$="[[bottom]]" class="nav" image="{{video.thumbnail}}">
+                            <paper-card mini$="[[mini]]" bottom$="[[bottom]]" sideWays$="[[sideWays]]" class="nav" image="{{video.thumbnail}}">
                             </paper-card>
                         </a>
-                        <div class="card-content" mini$="[[mini]]" bottom$="[[bottom]]" title="{{video.title}}">
-                            <div class="contentView" mini$="[[mini]]" bottom$="[[bottom]]"> {{video.shortTitle}} </div>
-                            <div class="channelView" mini$="[[mini]]">
+                        <div class="card-content" mini$="[[mini]]" bottom$="[[bottom]]" title="{{video.title}}" sideWays$="[[sideWays]]">
+                            <div class="contentView" mini$="[[mini]]" bottom$="[[bottom]]" sideWays$="[[sideWays]]"> {{video.shortTitle}} </div>
+                            <div class="channelView" mini$="[[mini]]" bottom$="[[bottom]]">
                                 <a name="/youtube/search/" href="/youtube/search/channel?api=search&q={{video.channelId}}">
                                     <paper-button on-click="_seethisshit">
                                         <iron-icon icon="link"></iron-icon>{{video.channelTitle}}</paper-button>
@@ -277,19 +311,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         notify: true,
                         reflectToAttribute: true
                     },
+                    sideWays: {
+                        type: Boolean,
+                        value: false,
+                        notify: true,
+                        reflectToAttribute: true
+                    },
                 }
             }
-          
-            itemsChanged(data) {                
-                if (data === true) {                    
+
+            itemsChanged(data) {
+                if (data === true) {
                     this.set("items", window.searches[window.searches.q])
-                    console.log("items", this.items)  
-                    this.notifyPath('items')                  
-                    this.change = false                    
-                }                 
+                    console.log("items", this.items)
+                    this.notifyPath('items')
+                    this.change = false
+                }
             }
 
-            fuckedYouUp(data){
+            fuckedYouUp(data) {
                 console.log('realy did..!!', data)
             }
             _seethisshit() {
