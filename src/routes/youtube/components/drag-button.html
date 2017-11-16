@@ -57,19 +57,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 width: 100%;
                 height: 5px;
                 position: relative;
-                margin-bottom: 3px;               
-            }
+                                           }
             .playingB {
                 background: linear-gradient(to bottom, transparent 49%, #9e8f8f 51%, transparent 87%);
                 float: left;
                 width: 100%;
                 height: 10px;
+                margin-top: 0px;
+                transition: margin-top 1s ease-in-out 1s;
+            }
+            .playingB[open] {               
+                margin-top: 3px;
             }
         </style>
 
         <div id="content" class="content" open$="[[open]]" on-click="openThisShit">
             <div id="up" class="playing" open$="[[open]]" ></div>
-            <div id="down" class="playingB"></div>
+            <div id="down" class="playingB" open$="[[open]]"></div>
         </div>
     </template>
     <script>
