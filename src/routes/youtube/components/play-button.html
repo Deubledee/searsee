@@ -33,7 +33,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 width: 15px;
                 height: 30px;
                 opacity: 1;
-                transition: height 1s ease-in-out 1s, opacity 0.5s ease-in-out 1s;
+                transition: height 1s ease-in-out, opacity 1s ease-in-out 0.5s;
             }
 
             .pauseB[pause] {
@@ -42,7 +42,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 width: 15px;
                 height: 30px;
                 opacity: 1;
-                transition: height 1s ease-in-out 1s, opacity 0.5s ease-in-out 1s;
+                transition: height 1s ease-in-out, opacity 1s ease-in-out 0.5s;
             }
 
             .playing[playing] {
@@ -51,7 +51,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 width: 30px;
                 height: 15px;
                 opacity: 1;
-                transition: width 2s ease-in-out, opacity 0.5s ease-in-out 1s;
+                transition: width 1s ease-in-out, opacity 0.5s ease-in-out 0.5s;
             }
 
             .playingB[playing] {
@@ -60,7 +60,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 width: 30px;
                 height: 15px;
                 opacity: 1;
-                transition: width 2s ease-in-out, opacity 0.5s ease-in-out 1s;
+                transition: width 1s ease-in-out, opacity 0.5s ease-in-out 0.5s;
             }
 
             .playing[default] {
@@ -135,7 +135,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     setTimeout(() => {
                         this.pause = !this.pause
                         this.default = !this.default
-                    }, 300)
+                    }, 100)
 
                 } else {
                     this.default = !this.default
