@@ -108,15 +108,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         left: 10px;
       }
 
+      paper-icon-button[drop] {
+        top: -42px;
+        z-index: 1;
+        transition: z-index 0.5 ease, top 0.5 ease;
+      }
+
       .navbar {
-        /* background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);*/        
+        /* background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);*/
         top: 0px;
         padding-top: 32px;
         padding-left: 19px;
       }
+
       .navbar[wide] {
         width: 95%;
       }
+
       .navbar-bottom {
         background: linear-gradient(to right, #464446 0%, #070401 5%, #464446 50%, #040500 95%, #464446 100%);
         height: auto;
@@ -145,7 +153,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       .mie[drop] {
-        top: -2px;
+        top: 37px;
         background: transparent
       }
 
@@ -209,7 +217,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     properties into the queryParams object. youtube-lite doesn't have any code
     that's even aware of routing or the URL. -->
 
-    <nav id="navYt" wide$="[[wide]]"class="navbar navbar-expand-lg">
+    <nav id="navYt" wide$="[[wide]]" class="navbar navbar-expand-lg">
       <youtube-lite class="player" default$="[[default]]" id="player" video-id="{{videData.page}}" state="{{queryParams.state}}"
         current-time="{{queryParams.time}}" start-time="{{queryParams.time}}">
       </youtube-lite>
@@ -246,7 +254,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     <div class="row" id="res">
       <div class="coll-xs-12 mie" id="results" default$="[[default]]" drop$="[[toggle]]" wide$="[[wide]]">
-        <paper-icon-button icon="menu" on-click="_drToggle"></paper-icon-button>
+        <paper-icon-button icon="menu" on-click="_drToggle" drop$="[[toggle]]"></paper-icon-button>
         <search-results id="results" class="width" mini="true" side-ways="[[sideWays]]" bottom="[[bottom]]" route="{{route}}" items="{{items}}">
         </search-results>
         <drag-button class="drag" wide$="[[wide]]" toggle="{{toggle}}"> </drag-button>
@@ -446,7 +454,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           setTimeout(() => {
             window.document.body.style.overflowY = "hidden"
             window.document.body.style.overflowX = "hidden"
-            this.style.position = "fixed" 
+            this.style.position = "fixed"
             this.$.player.style.top = "-10px"
             this.$.player.style.width = (window.innerWidth - 40) + "px"
             this.$.player.style.height = (window.screen.height - 60) + "px"
@@ -494,6 +502,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _stateChanged(state) {
+        this.set("fulTime", this.$.player.$.player.durationformatted)
         this.playing = state === 'playing';
         this.getTime(this.queryParams)
       }
@@ -531,38 +540,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           time: time
         })
       }
-      _toSeconds(obj) {
-        if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
-          let time, mTime, sTime, hTime, seconds
-          if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
-            time = obj.items[0].contentDetails.duration.split("H")
-            hTime = time[0].split("PT")[1]
-            mTime = time[1].split("M")[0]
-            sTime = time[1].split("M")[1].split("S").join()
-            hTime = parseInt(hTime)
-            mTime = parseInt(mTime)
-            sTime = parseInt(sTime)
-            hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
-            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
-            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
-            time = hTime + ":" + mTime + ":" + sTime
-            seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
-          } else {
-            time = obj.items[0].contentDetails.duration.split("M")
-            mTime = time[0].split("PT")[1]
-            sTime = time[1].split("S")[0]
-            mTime = parseInt(mTime)
-            sTime = parseInt(sTime)
-            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
-            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
-            time = mTime + ":" + sTime
-            seconds = (parseInt(mTime) * 60) + parseInt(sTime)
+      /*    _toSeconds(obj) {
+            if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
+              let time, mTime, sTime, hTime, seconds
+              if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
+                time = obj.items[0].contentDetails.duration.split("H")
+                hTime = time[0].split("PT")[1]
+                mTime = time[1].split("M")[0]
+                sTime = time[1].split("M")[1].split("S").join()
+                hTime = parseInt(hTime)
+                mTime = parseInt(mTime)
+                sTime = parseInt(sTime)
+                hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
+                mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+                sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+                time = hTime + ":" + mTime + ":" + sTime
+                seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
+              } else {
+                time = obj.items[0].contentDetails.duration.split("M")
+                mTime = time[0].split("PT")[1]
+                sTime = time[1].split("S")[0]
+                mTime = parseInt(mTime)
+                sTime = parseInt(sTime)
+                mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+                sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+                time = mTime + ":" + sTime
+                seconds = (parseInt(mTime) * 60) + parseInt(sTime)
+              }
+              this.set("time", seconds.toString())
+              this.set("fulTime", time.toString())
+            }
           }
-          this.set("time", seconds.toString())
-          this.set("fulTime", time.toString())
-        }
-      }
-
+    */
       _time(data) {
         if (data.hasOwnProperty("state") === false) {
           this.transformedTime = `00:00:00`
