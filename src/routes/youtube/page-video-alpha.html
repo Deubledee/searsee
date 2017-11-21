@@ -101,18 +101,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         font-weight: bold;
       }
 
-      .navol {
-        position: relative;
-        width: 100%;
-        color: #5e8aab;
-        font-size: 11px;
-        top: -13px;
-      }
-
       paper-icon-button {
         position: relative;
         color: #bd8130;
-        top: -16.5px;
+        top: -7px;
         left: 10px;
       }
 
@@ -120,29 +112,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         top: -42px;
         z-index: 1;
         transition: z-index 0.5 ease, top 0.5 ease;
-      }
-
-      paper-icon-button.right {
-        left: 30.5%;
-        top: -6px;
-      }
-
-      .volumeButton {
-        border-radius: 12px;
-        position: relative;
-        width: 25px;
-        height: 25px;
-        top: 15px;
-        right: -27.5%;
-        background: #4c4c4c;
-        background: -moz-radial-gradient(ellipse at center, #4c4c4c 0%, #595959 8%, #595959 8%, #595959 11%, #666666 18%, #474747 20%, #2c2c2c 24%, rgba(0, 0, 0, 0.4) 47%, rgba(17, 17, 17, 0.14901960784313725) 60%, rgba(28, 28, 28, 0) 91%, rgba(43, 43, 43, 0) 94%, rgba(43, 43, 43, 0) 94%, rgba(19, 19, 19, 0) 100%);
-        background: -webkit-radial-gradient(ellipse at center, #4c4c4c 0%, #595959 8%, #595959 8%, #595959 11%, #666666 18%, #474747 20%, #2c2c2c 24%, rgba(0, 0, 0, 0.4) 47%, rgba(17, 17, 17, 0.14901960784313725) 60%, rgba(28, 28, 28, 0) 91%, rgba(43, 43, 43, 0) 94%, rgba(43, 43, 43, 0) 94%, rgba(19, 19, 19, 0) 100%);
-        background: radial-gradient(ellipse at center, #403f3f 0%, #595959 8%, rgb(89, 89, 89) 8%, #616060 11%, #666666 18%, #474747 20%, rgba(103, 144, 125, 0.67) 24%, rgba(125, 123, 123, 0.4) 47%, rgba(17, 17, 17, 0.14901960784313725) 60%, rgb(56, 75, 89) 91%, rgba(43, 43, 43, 0) 94%, rgb(45, 138, 210) 94%, rgba(19, 19, 19, 0) 100%);
-        transition: border-radius 1s ease-out
-      }
-
-      .volumeButton[show] {
-        border-radius: 5px;
       }
 
       .navbar {
@@ -200,58 +169,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         display: block
       }
 
-      .volume {
-        position: relative;
-        opacity: 0;
-        top: 44px;
-        z-index: 0;
-        height: 0px;
-        -webkit-transition: all 0.5s ease-in-out;
-        -moz-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;
-      }
-
-      .volume[show] {
-        top: 9px;
-        position: relative;
-        opacity: 1;
-        z-index: 1;
-        width: auto;
-        height: 31px;
-        margin-bottom: 52px;
-      }
-
-      .scale {
-        position: relative;
-        opacity: 0;
-        top: 9px;
-        z-index: 0;       
-        width: auto;
-        height: 0px;
-        -webkit-transition: all 0.5s ease-in-out;
-        -moz-transition: all 0.5s ease-in-out;
-        transition: all 0.5s ease-in-out;
-      }
-
-      .scale[show] {
-        position: relative;
-        opacity: 1;
-        z-index: 1;
-        width: auto;
-        height: 31px;
-        margin-bottom: 23px;
-      }
-
-
-      .thirtyOne {
-        position: relative;
-        height: 31px;
-        width: auto;
-        z-index: 3;
-        float: left;
-        padding-right: 2.5%;
-        padding-left: 2.5%;
-      }
+      @media (max-width: 640px) {}
 
       @media (min-width: 992px) {
         .navbar-expand-lg {
@@ -283,32 +201,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       .state {
         visibility: hidden
       }
-
-      .fullVol {
-        background: linear-gradient(to bottom right, rgba(210, 210, 210, 0.0196078431372549) 1%, rgba(0, 0, 0, 0) 53%, rgba(109, 112, 150, 0.72) 76%, #4b4a90 101%);
-        position: relative;
-        margin-bottom: 0px;
-        top: 0px;
-        width: 100%;
-        height: 15px;
-        color: aliceblue;
-        /* left: 9px; */
-        opacity: 0.5;
-        transition: width 0.5s ease 0.5s;
-      }
-
-      .wrapper {
-        position: relative;
-        margin-bottom: 0px;
-        left: -5%;
-        top: 7px;
-        width: 100%;
-        height: 15px;;
-      }
-
-      .right {
-        float: right
-      }
     </style>
 
     <!-- This app-route consumes the route which was provided by the tail of
@@ -333,11 +225,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <div id="heg" class="slider">
       <nav class="navi nav" id="nav">
         <div class="nav-item navtem">
-          <div class="volumeButton" show$="[[show]]">
-            <paper-icon-button class="right" on-click="_volume"></paper-icon-button>
-          </div>
-        </div>
-        <div class="nav-item navtem">
           <p>
             <div id="valu" class="value"> {{transformedTime}} </div>
           </p>
@@ -357,31 +244,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <div id="valu2" class="value2"> {{fulTime}}</div>
           </p>
         </div>
+        <div class="nav-item navtem">
+        <!--  <p>
+            div class="type">duration</div-
+            <div id="vol" class="volume"> 
+
+            </div>value2
+          </p>-->
+        </div>
       </nav>
-      <div class="nav volume" id="volume" show$="[[show]]">
-        <div class="wrapper" id="fullVlVal">
-          <div class="coll-xs-12 fullVol">
-            <span class="right"> </span>
-          </div>
-        </div>
-        <div class="nav-item navol">
-          <div class="scale" show$="[[show]]" on-track="setVolume">
-            <div class="coll-xs-12 thirtyOne thirtyOneTop">0</div>
-            <div class="coll-xs-12 thirtyOne">10</div>
-            <div class="coll-xs-12 thirtyOne">20</div>
-            <div class="coll-xs-12 thirtyOne">30</div>
-            <div class="coll-xs-12 thirtyOne">40</div>
-            <div class="coll-xs-12 thirtyOne">50</div>
-            <div class="coll-xs-12 thirtyOne">60</div>
-            <div class="coll-xs-12 thirtyOne">70</div>
-            <div class="coll-xs-12 thirtyOne">80</div>
-            <div class="coll-xs-12 thirtyOne">90</div>
-            <div class="coll-xs-12 thirtyOne">100</div>
-          </div>
-        </div>
-      </div>
       <nav id="controls" class="nav">
-        <div class="nav-item">
+        <div class="nav-item ">
           <time-input id="fds" class="z2" resize="{{resize}}" query="{{queryParams.time}}" time="[[time]]" real-time="{{realTime}}"
             on-down="pause" on-up="play"></time-input>
         </div>
@@ -503,12 +376,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             notify: true,
             reflectToAttribute: true
           },
-          show: {
-            type: Boolean,
-            value: false,
-            notify: true,
-            reflectToAttribute: true
-          },
           lock: {
             type: Boolean,
             value: false
@@ -538,41 +405,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         setTimeout(() => {
           var magic
           if (window.innerWidth <= 400) {
-            magic = 9
+            magic = 5
             if (window.innerWidth <= 320) {
-              magic = 15
+              magic = 5.5
             }
           } else {
-            magic = 6
+            magic = 4
           }
-          //coloca o time, o play e no lugar certo em todas os devices        
-
+          //coloca o time e o play no lugar certo em todas os devices
           this.$.state.style.visibility = "visible"
           this.$.valu.style.visibility = "visible"
           this.$.valu2.style.visibility = "visible"
-
           this.$.valu.style.marginRight = magic = Math.floor((window.innerWidth / magic) - 5) + "px"
           this.$.valu.style.transition = "margin-right 0.5s ease-in-out"
           this.$.valu2.style.marginLeft = Math.floor(window.innerWidth / 7) + "px"
           this.$.valu2.style.transition = "margin-right 0.5s ease-in-out"
         }, 750)
-        setTimeout(() => {
-          let paddingLeft, left;
-          if (window.innerWidth <= 412) {
-            paddingLeft = "-10%" 
-            left = "-10%"
-            if (window.innerWidth <= 360) {
-              paddingLeft = "5%"
-              left = "5%"          
-              if (window.innerWidth <= 320) {
-                paddingLeft = "2%"
-                left = "-10"
-              }
-            }
-          }
-          this.$.fullVlVal.style.left = paddingLeft
-          this.$.volume.style.paddingLeft = paddingLeft
-        }, 1000)
       }
       static get observers() {
         return [
@@ -587,36 +435,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
       setItems() {
         this.items = window.searches[window.searches.q]
-      }     
+      }
+      _setItems(data) {
+        this.items = window.searches[data]
+      }
       _seethisshit() {
         window.scrollTo({}, 0)
       }
 
       _drToggle() {
         this.bottom = !this.bottom
-      }
-      _volume() {
-        this.show = !this.show
-      }
-      setVolume(e) {
-        let volVal = ((e.detail.x / 30).toString().split(".").join(""))
-        volVal = volVal.length <= 2 ? parseInt(volVal) : parseInt(volVal.slice(0, 2))
-        if (e.detail.x > 300) {
-          volVal = 100
-        }
-        let elem = e.detail.hover()
-        if (elem.classList.contains("thirtyOne")) {
-          elem.style.fontSize = "20px"
-          elem.style.color = "#5fa09b"
-          elem.style.transition = 'fontSize 0.2 ease'
-          this.$.fullVlVal.style.width = `${e.detail.x}px`
-          setTimeout(() => {
-            elem.style.fontSize = "11px"
-            elem.style.color = "#5e8aab"
-
-          }, 500)
-        }
-        this.$.player.$.player.setVolume(volVal)
       }
 
       orient(data, detail) {
@@ -682,10 +510,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       _stateChanged(state) {
-        setTimeout(() => {
-          this.set("fulTime", this.$.player.$.player.durationformatted)
-          this.fullVolVal = this.$.player.$.player.volume
-        }, 250)
+        this.set("fulTime", this.$.player.$.player.durationformatted)
         this.playing = state === 'playing';
         this.getTime(this.queryParams)
       }
@@ -694,7 +519,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // change color of page on page change
         var newColor;
         this.routePage = "videos"
-        if (videoPageActive) {                
+        if (videoPageActive) {
+          // black
+          //this.style.display = "block"
+          console.log("active")
           newColor = 0;
         } else {
           // white
@@ -720,38 +548,38 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           time: time
         })
       }
-      _toSeconds(obj) {
-        if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
-          let time, mTime, sTime, hTime, seconds
-          if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
-            time = obj.items[0].contentDetails.duration.split("H")
-            hTime = time[0].split("PT")[1]
-            mTime = time[1].split("M")[0]
-            sTime = time[1].split("M")[1].split("S").join()
-            hTime = parseInt(hTime)
-            mTime = parseInt(mTime)
-            sTime = parseInt(sTime)
-            hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
-            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
-            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
-            time = hTime + ":" + mTime + ":" + sTime
-            seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
-          } else {
-            time = obj.items[0].contentDetails.duration.split("M")
-            mTime = time[0].split("PT")[1]
-            sTime = time[1].split("S")[0]
-            mTime = parseInt(mTime)
-            sTime = parseInt(sTime)
-            mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
-            sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
-            time = mTime + ":" + sTime
-            seconds = (parseInt(mTime) * 60) + parseInt(sTime)
+         _toSeconds(obj) {
+            if (obj !== null && obj !== undefined && obj.hasOwnProperty("items") === true) {
+              let time, mTime, sTime, hTime, seconds
+              if (obj.items[0].contentDetails.duration.indexOf("H") > 0) {
+                time = obj.items[0].contentDetails.duration.split("H")
+                hTime = time[0].split("PT")[1]
+                mTime = time[1].split("M")[0]
+                sTime = time[1].split("M")[1].split("S").join()
+                hTime = parseInt(hTime)
+                mTime = parseInt(mTime)
+                sTime = parseInt(sTime)
+                hTime = hTime < 10 ? `0${hTime}` : `${hTime}`
+                mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+                sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+                time = hTime + ":" + mTime + ":" + sTime
+                seconds = (parseInt(hTime) * 3600) + (parseInt(mTime) * 60) + parseInt(sTime)
+              } else {
+                time = obj.items[0].contentDetails.duration.split("M")
+                mTime = time[0].split("PT")[1]
+                sTime = time[1].split("S")[0]
+                mTime = parseInt(mTime)
+                sTime = parseInt(sTime)
+                mTime = mTime < 10 ? `0${mTime}` : `${mTime}`
+                sTime = sTime < 10 ? `0${sTime}` : `${sTime}`
+                time = mTime + ":" + sTime
+                seconds = (parseInt(mTime) * 60) + parseInt(sTime)
+              }
+              this.set("time", seconds.toString())
+              //this.set("fulTime", time.toString())
+            }
           }
-          this.set("time", seconds.toString())
-          //this.set("fulTime", time.toString())
-        }
-      }
-
+    
       _time(data) {
         if (data.hasOwnProperty("state") === false) {
           this.transformedTime = `00:00:00`
